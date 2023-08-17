@@ -35,7 +35,7 @@ public class ClienteController {
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Erro " + e.getMessage());
         }
-        return ResponseEntity.ok().body("Reistro cadastrado com sucesso!");
+        return ResponseEntity.ok().body("Registro cadastrado com sucesso!");
     }
 
     @PutMapping("/{id}")
