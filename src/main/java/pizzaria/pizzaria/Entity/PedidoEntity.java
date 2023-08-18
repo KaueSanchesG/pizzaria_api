@@ -14,16 +14,16 @@ import java.util.List;
 @Table(name = "Pedido")
 public class PedidoEntity extends AbstractEntity {
     @ManyToOne
-    @JoinColumn(name = "Cliente_id")
+    @JoinColumn(name = "Cliente_id", nullable = false)
     private ClienteEntity cliente;
 
     @ManyToMany
     @JoinTable(
-            name = "Pedido_Produto",
+            name = "pedido_produto",
             joinColumns = @JoinColumn(name = "pedido_id"),
             inverseJoinColumns = @JoinColumn(name = "produto_id")
     )
-    private List<ProdutoEntity> produtos = new ArrayList<>();
+    private List<ProdutoEntity> produtos;
 
     @Column(name = "Entrega")
     private Boolean entrega;

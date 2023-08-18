@@ -12,18 +12,15 @@ import java.util.List;
 @Table(name = "Cliente")
 public class ClienteEntity extends AbstractEntity {
 
-    @Column(name = "Nome", nullable = false)
+    @Column(name = "Nome", nullable = false, length = 50)
     private String nome;
 
-    @Column(name = "CPF")
-    private int cpf;
+    @Column(name = "CPF", length = 15)
+    private String cpf;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "Endereco_id")
-    private EnderecoEntity enderecos;
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private List<EnderecoEntity> enderecos;
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "Cliente_id")
-    private List<PedidoEntity> pedidos;
 }
 

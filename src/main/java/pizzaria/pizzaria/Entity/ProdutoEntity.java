@@ -18,7 +18,12 @@ public class ProdutoEntity extends AbstractEntity {
     @Column(name = "Valor", nullable = false)
     private Double valor;
 
-    @ManyToMany(mappedBy = "produtos")
-    private List<PedidoEntity> pedidos = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "produto_pizzasabor",
+            joinColumns = @JoinColumn(name = "produto_id"),
+            inverseJoinColumns = @JoinColumn(name = "pizzasabor_id")
+    )
+    private List<SaborEntity> pizzaSabor;
 
 }

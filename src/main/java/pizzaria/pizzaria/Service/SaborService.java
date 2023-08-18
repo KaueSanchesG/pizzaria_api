@@ -10,7 +10,7 @@ import pizzaria.pizzaria.Entity.ProdutoEntity;
 import pizzaria.pizzaria.Entity.SaborEntity;
 import pizzaria.pizzaria.Repository.SaborRepository;
 @Service
-public class SaborService {
+public class    SaborService {
     @Autowired
     private SaborRepository saborRepository;
     @Autowired
