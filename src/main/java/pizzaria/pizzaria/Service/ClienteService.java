@@ -61,9 +61,6 @@ public class ClienteService {
         if(clienteDTO.getNome().length()<3 || clienteDTO.getNome().length() > 50){
             throw new RuntimeException("Nome do cliente está errado (de 3 a 50 caracteres!)");
         }
-        if(clienteRepository.findByCpf(clienteDTO.getCpf())!=null){
-            throw new RuntimeException("O CPF já existe");
-        }
         modelMapper.map(clienteDTO, clienteBanco);
         clienteRepository.save(clienteBanco);
     }
