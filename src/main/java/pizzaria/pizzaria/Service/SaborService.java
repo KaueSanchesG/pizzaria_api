@@ -21,10 +21,10 @@ public class SaborService {
             throw new RuntimeException("Deixe o campo Id vago, ele é gerado pelo banco");
         }
         if(saborDTO.getNome()==null){
-            throw new RuntimeException("Funcionario não possui um nome");
+            throw new RuntimeException("Sabor não possui um nome");
         }
         if(saborDTO.getNome().length()<3 || saborDTO.getNome().length() > 50){
-            throw new RuntimeException("Nome do Funcionario está errado (de 3 a 50 caracteres!)");
+            throw new RuntimeException("Nome do Sabor está errado (de 3 a 50 caracteres!)");
         }
         SaborEntity sabor = modelMapper.map(saborDTO, SaborEntity.class);
         return saborRepository.save(sabor);
@@ -37,10 +37,10 @@ public class SaborService {
             throw new RuntimeException("Não foi possivel encontrar o registro!!!");
         }
         if(saborDTO.getNome()==null){
-            throw new RuntimeException("Funcionario não possui um nome");
+            throw new RuntimeException("Sabor não possui um nome");
         }
         if(saborDTO.getNome().length()<3 || saborDTO.getNome().length() > 50){
-            throw new RuntimeException("Nome do Funcionario está errado (de 3 a 50 caracteres!)");
+            throw new RuntimeException("Nome do Sabor está errado (de 3 a 50 caracteres!)");
         }
         modelMapper.map(saborDTO, saborBanco);
         saborRepository.save(saborBanco);
