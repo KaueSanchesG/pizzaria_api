@@ -15,13 +15,15 @@ public class ClienteEntity extends AbstractEntity {
     @Column(name = "Nome", nullable = false)
     private String nome;
 
-    @Column(name = "CPF", nullable = false, unique = true)
+    @Column(name = "CPF")
     private int cpf;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EnderecoEntity> enderecos;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "Endereco_id")
+    private EnderecoEntity enderecos;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "Cliente_id")
     private List<PedidoEntity> pedidos;
 }
 
