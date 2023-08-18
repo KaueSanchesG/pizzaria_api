@@ -10,6 +10,8 @@ import pizzaria.pizzaria.Entity.FuncionarioEntity;
 import pizzaria.pizzaria.Entity.PedidoEntity;
 import pizzaria.pizzaria.Repository.PedidoRepository;
 
+import java.time.LocalDateTime;
+
 @Service
 public class PedidoService {
     @Autowired
@@ -22,6 +24,9 @@ public class PedidoService {
         if (pedidoDTO.getId() != null) {
             throw new RuntimeException("Deixe o campo Id vago, ele é gerado pelo banco");
         }
+        if (pedidoDTO.getDataHora().equals("")){
+            pedidoDTO.setDataHora(LocalDateTime.now());
+        }
         PedidoEntity pedido = modelMapper.map(pedidoDTO, PedidoEntity.class);
         return pedidoRepository.save(pedido);
     }
@@ -31,6 +36,9 @@ public class PedidoService {
         PedidoEntity pedidoBanco = pedidoRepository.findById(id).orElseThrow(() -> new RuntimeException("Endereço de id não encontrado!!!"));
         if (!pedidoBanco.getId().equals(pedidoDTO.getId())) {
             throw new RuntimeException("Não foi possivel encontrar o registro!!!");
+        }
+        if (pedidoDTO.getDataHora().equals("")){
+            pedidoDTO.setDataHora(LocalDateTime.now());
         }
         modelMapper.map(pedidoDTO, pedidoBanco);
         pedidoRepository.save(pedidoBanco);

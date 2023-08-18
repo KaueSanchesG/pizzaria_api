@@ -23,6 +23,9 @@ public class ProdutoService {
         if (produtoDTO.getId() != null) {
             throw new RuntimeException("Deixe o campo Id vago, ele é gerado pelo banco");
         }
+        if(produtoDTO.getValor() != 0) {
+            throw new RuntimeException("Valor nao pode ser 0");
+        }
         ProdutoEntity produto = modelMapper.map(produtoDTO, ProdutoEntity.class);
         return produtoRepository.save(produto);
     }
@@ -32,6 +35,9 @@ public class ProdutoService {
         ProdutoEntity produtoBanco = produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Endereço de id não encontrado!!!"));
         if (!produtoBanco.getId().equals(produtoDTO.getId())) {
             throw new RuntimeException("Não foi possivel encontrar o registro!!!");
+        }
+        if(produtoDTO.getValor() != 0) {
+            throw new RuntimeException("Valor nao pode ser 0");
         }
         modelMapper.map(produtoDTO, produtoBanco);
         produtoRepository.save(produtoBanco);

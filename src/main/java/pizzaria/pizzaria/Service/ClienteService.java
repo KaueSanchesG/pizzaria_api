@@ -25,13 +25,16 @@ public class ClienteService {
             throw new RuntimeException("Deixe o campo Id vago, ele é gerado pelo banco");
         }
         if (!this.validaCPF.isCPF(clienteDTO.getCpf())) {
-            throw new RuntimeException("Cpf de condutor está incorreto");
+            throw new RuntimeException("Cpf do cliente está incorreto");
+        }
+        if(clienteDTO.getCpf()==null){
+            throw new RuntimeException("Cliente não possui um CPF");
         }
         if(clienteDTO.getNome()==null){
-            throw new RuntimeException("Condutor não possui um nome");
+            throw new RuntimeException("Cliente não possui um nome");
         }
         if(clienteDTO.getNome().length()<3 || clienteDTO.getNome().length() > 50){
-            throw new RuntimeException("Nome de condutor está errado (de 3 a 50 caracteres!)");
+            throw new RuntimeException("Nome do cliente está errado (de 3 a 50 caracteres!)");
         }
         if(clienteRepository.findByCpf(clienteDTO.getCpf())!=null){
             throw new RuntimeException("O CPF já existe");
@@ -46,14 +49,17 @@ public class ClienteService {
         if (!clienteBanco.getId().equals(clienteDTO.getId())) {
             throw new RuntimeException("Não foi possivel encontrar o registro!!!");
         }
+        if(clienteDTO.getCpf()==null){
+            throw new RuntimeException("Cliente não possui um CPF");
+        }
         if (!this.validaCPF.isCPF(clienteDTO.getCpf())) {
-            throw new RuntimeException("Cpf de condutor está incorreto");
+            throw new RuntimeException("Cpf do cliente está incorreto");
         }
         if(clienteDTO.getNome()==null){
-            throw new RuntimeException("Condutor não possui um nome");
+            throw new RuntimeException("cliente não possui um nome");
         }
         if(clienteDTO.getNome().length()<3 || clienteDTO.getNome().length() > 50){
-            throw new RuntimeException("Nome de condutor está errado (de 3 a 50 caracteres!)");
+            throw new RuntimeException("Nome do cliente está errado (de 3 a 50 caracteres!)");
         }
         if(clienteRepository.findByCpf(clienteDTO.getCpf())!=null){
             throw new RuntimeException("O CPF já existe");
