@@ -10,7 +10,7 @@ import java.util.List;
 public class ClienteDTO {
     private Long id;
     private String nome;
-    private int cpf;
+    private String cpf;
     private List<EnderecoDTO> enderecos;
     private List<PedidoDTO> pedidos;
 }
