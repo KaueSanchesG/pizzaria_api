@@ -11,11 +11,14 @@ import java.util.List;
 @Setter
 @Table(name = "Produto")
 public class ProdutoEntity extends AbstractEntity {
-    @Column(name = "Nome", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String nome;
 
-    @Column(name = "Valor", nullable = false)
+    @Column(nullable = false)
     private Double valor;
+
+    @ManyToMany(mappedBy = "produtos")
+    private List<PedidoEntity> pedidos;
 
     @ManyToMany
     @JoinTable(

@@ -21,5 +21,5 @@ public class ClienteDTO extends AbstractDTO{
     @CPF(message = "o CPF deve seguir a norma padrão")
     private String cpf;
     private List<EnderecoDTO> enderecos;
-//    private List<PedidoDTO> pedidos;
+    private List<PedidoDTO> pedidos;
 }

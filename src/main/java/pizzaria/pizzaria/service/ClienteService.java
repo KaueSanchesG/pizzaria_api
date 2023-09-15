@@ -39,11 +39,4 @@ public class ClienteService {
         }
         return modelMapper.map(repository.save(modelMapper.map(clienteDTO, ClienteEntity.class)), ClienteDTO.class);
     }
-
-    @Transactional
-    public void delete(Long id) {
-        ClienteEntity cliente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Não foi possivel encontrar o registro informado"));
-        repository.delete(cliente);
-    }
 }

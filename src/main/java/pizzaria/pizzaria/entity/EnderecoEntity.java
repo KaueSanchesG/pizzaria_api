@@ -9,9 +9,13 @@ import lombok.Setter;
 @Setter
 @Table(name = "Endereco")
 public class EnderecoEntity extends AbstractEntity {
-    @Column(name = "Rua", nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     private String rua;
 
-    @Column(name = "Numero", nullable = false)
+    @Column(nullable = false)
     private int numero;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private ClienteEntity cliente;
 }
