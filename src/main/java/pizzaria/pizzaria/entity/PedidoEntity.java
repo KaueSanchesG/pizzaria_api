@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "Pedido")
 public class PedidoEntity extends AbstractEntity {
     @ManyToOne
-    @JoinColumn(name = "Cliente_id", nullable = false)
+    @JoinColumn(name = "cliente_id", nullable = false)
     private ClienteEntity cliente;
 
     @ManyToMany
@@ -24,16 +24,16 @@ public class PedidoEntity extends AbstractEntity {
     )
     private List<ProdutoEntity> produtos;
 
-    @Column(name = "Entrega")
+    @Column
     private Boolean entrega;
 
-    @Column(name = "Valor_Total")
+    @Column
     private Double valorTotal;
 
-    @Column(name = "Data_Hora")
+    @Column
     private LocalDateTime dataHora;
 
     @ManyToOne
-    @JoinColumn(name = "Funcionario_id")
+    @JoinColumn(name = "funcionario_id")
     private FuncionarioEntity funcionario;
 }

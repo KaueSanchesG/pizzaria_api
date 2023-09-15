@@ -24,10 +24,11 @@ public class ClienteEntity extends AbstractEntity {
     private String cpf;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cliente_id", nullable = false)
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<EnderecoEntity> enderecos;
 
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<PedidoEntity> pedidos;
 }
 
