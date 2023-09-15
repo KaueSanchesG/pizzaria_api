@@ -26,13 +26,17 @@ public class ClienteController {
     private ModelMapper modelMapper;
 
     @GetMapping("/list")
-    public List<ClienteDTO> list() {
-        List<ClienteDTO> listDTO = new ArrayList<>();
-        for (ClienteEntity entity : repository.findAll()) {
-            ClienteDTO map = modelMapper.map(entity, ClienteDTO.class);
-            listDTO.add(map);
+    public ResponseEntity<List<ClienteDTO>> list() {
+        try {
+            List<ClienteDTO> listDTO = new ArrayList<>();
+            for (ClienteEntity entity : repository.findAll()) {
+                ClienteDTO map = modelMapper.map(entity, ClienteDTO.class);
+                listDTO.add(map);
+            }
+            return new ResponseEntity<>(listDTO, HttpStatus.FOUND);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
-        return listDTO;
     }
 
     @GetMapping
