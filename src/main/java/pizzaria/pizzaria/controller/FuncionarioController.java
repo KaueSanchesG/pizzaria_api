@@ -1,13 +1,19 @@
 package pizzaria.pizzaria.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pizzaria.pizzaria.dto.FuncionarioDTO;
 import pizzaria.pizzaria.entity.FuncionarioEntity;
 import pizzaria.pizzaria.repository.FuncionarioRepository;
 import pizzaria.pizzaria.service.FuncionarioService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/funcionario")
@@ -16,47 +22,55 @@ public class FuncionarioController {
     private FuncionarioService service;
     @Autowired
     private FuncionarioRepository repository;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    @GetMapping("/lista")
-    public ResponseEntity<?> list() {
-        return ResponseEntity.ok(this.repository.findAll());
+    @GetMapping("/list")
+    public ResponseEntity<List<FuncionarioDTO>> list() {
+        try {
+            List<FuncionarioDTO> listDTO = new ArrayList<>();
+            for (FuncionarioEntity entity : repository.findAll()) {
+                FuncionarioDTO map = modelMapper.map(entity, FuncionarioDTO.class);
+                listDTO.add(map);
+            }
+            return new ResponseEntity<>(listDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<?> getIdByRequest(@RequestParam("id") final Long id) {
-        final FuncionarioEntity funcionario = this.repository.findById(id).orElse(null);
-        return funcionario == null ? ResponseEntity.badRequest().body("Sem valores encontrados") : ResponseEntity.ok(funcionario);
+    public ResponseEntity<FuncionarioDTO> getIdByRequest(@RequestParam("id") final Long id) {
+        final FuncionarioEntity entity = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foi possivel encontrar o registro"));
+        return ResponseEntity.ok(modelMapper.map(entity, FuncionarioDTO.class));
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody FuncionarioDTO funcionarioDTO) {
+    public ResponseEntity<FuncionarioDTO> create(@RequestBody @Validated FuncionarioDTO dto) {
         try {
-            service.create(funcionarioDTO);
+            return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        return ResponseEntity.ok().body("Registro cadastrado com sucesso!");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateByPath(@PathVariable("id") final Long id, @RequestBody final FuncionarioDTO funcionarioDTO) {
+    public ResponseEntity<FuncionarioDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated FuncionarioDTO dto) {
         try {
-            service.update(id, funcionarioDTO);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body("Erro " + e.getCause().getCause().getMessage());
+            return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        return ResponseEntity.ok("Registro editado com sucesso!");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") final Long id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") final Long id) {
         try {
-            service.delete(id);
+            FuncionarioEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+            repository.delete(entity);
+            return ResponseEntity.ok(HttpStatus.OK);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("Não foi possivel deletar");
+            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, e.getMessage());
         }
-        return ResponseEntity.ok("Registro deletado!");
     }
 }

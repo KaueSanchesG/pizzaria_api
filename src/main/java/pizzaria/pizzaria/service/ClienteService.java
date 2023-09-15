@@ -10,6 +10,8 @@ import pizzaria.pizzaria.dto.ClienteDTO;
 import pizzaria.pizzaria.entity.ClienteEntity;
 import pizzaria.pizzaria.repository.ClienteRepository;
 
+import java.util.Objects;
+
 @Service
 public class ClienteService {
     @Autowired
@@ -34,8 +36,9 @@ public class ClienteService {
         if (!database.getId().equals(clienteDTO.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O endereço não consta no banco!!");
         }
-        if (repository.findByCpf(clienteDTO.getCpf()) != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O CPF já existe");
+        clienteDTO.setCadastro(database.getCadastro());
+        if (clienteDTO.getCpf()==null){
+            clienteDTO.setCpf(database.getCpf());
         }
         return modelMapper.map(repository.save(modelMapper.map(clienteDTO, ClienteEntity.class)), ClienteDTO.class);
     }

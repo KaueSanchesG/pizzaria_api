@@ -2,8 +2,10 @@ package pizzaria.pizzaria.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import pizzaria.pizzaria.dto.FuncionarioDTO;
 import pizzaria.pizzaria.entity.FuncionarioEntity;
 import pizzaria.pizzaria.repository.FuncionarioRepository;
@@ -11,45 +13,22 @@ import pizzaria.pizzaria.repository.FuncionarioRepository;
 @Service
 public class FuncionarioService {
     @Autowired
-    private FuncionarioRepository funcionarioRepository;
+    private FuncionarioRepository repository;
     @Autowired
     private ModelMapper modelMapper;
 
     @Transactional
-    public FuncionarioEntity create(FuncionarioDTO funcionarioDTO) {
-        if (funcionarioDTO.getId() != null) {
-            throw new RuntimeException("Deixe o campo Id vago, ele é gerado pelo banco");
+    public FuncionarioDTO create(FuncionarioDTO dto) {
+        if (dto.getId() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deixe o campo Id vago, ele é gerado pelo banco");
         }
-        if(funcionarioDTO.getNome()==null){
-            throw new RuntimeException("Funcionario não possui um nome");
-        }
-        if(funcionarioDTO.getNome().length()<3 || funcionarioDTO.getNome().length() > 50){
-            throw new RuntimeException("Nome do Funcionario está errado (de 3 a 50 caracteres!)");
-        }
-        FuncionarioEntity funcionario = modelMapper.map(funcionarioDTO, FuncionarioEntity.class);
-        return funcionarioRepository.save(funcionario);
+        return modelMapper.map(repository.save(modelMapper.map(dto, FuncionarioEntity.class)), FuncionarioDTO.class);
     }
 
     @Transactional
-    public void update(Long id, FuncionarioDTO funcionarioDTO) {
-        FuncionarioEntity funcionarioBanco = funcionarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Endereço de id não encontrado!!!"));
-        if (!funcionarioBanco.getId().equals(funcionarioDTO.getId())) {
-            throw new RuntimeException("Não foi possivel encontrar o registro!!!");
-        }
-        if(funcionarioDTO.getNome()==null){
-            throw new RuntimeException("Funcionario não possui um nome");
-        }
-        if(funcionarioDTO.getNome().length()<3 || funcionarioDTO.getNome().length() > 50){
-            throw new RuntimeException("Nome do Funcionario está errado (de 3 a 50 caracteres!)");
-        }
-        modelMapper.map(funcionarioDTO, funcionarioBanco);
-        funcionarioRepository.save(funcionarioBanco);
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        FuncionarioEntity funcionario = funcionarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Não foi possivel encontrar o registro informado"));
-        funcionarioRepository.delete(funcionario);
+    public FuncionarioDTO update(Long id, FuncionarioDTO dto) {
+        FuncionarioEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço de id não encontrado!!!"));
+        dto.setCadastro(dataBase.getCadastro());
+        return modelMapper.map(repository.save(modelMapper.map(dto, FuncionarioEntity.class)), FuncionarioDTO.class);
     }
 }

@@ -34,6 +34,6 @@ public class PedidoEntity extends AbstractEntity {
     private LocalDateTime dataHora;
 
     @ManyToOne
-    @JoinColumn(name = "funcionario_id")
+    @JoinColumn(name = "funcionario_id", nullable = false)
     private FuncionarioEntity funcionario;
 }

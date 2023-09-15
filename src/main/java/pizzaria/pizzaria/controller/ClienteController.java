@@ -33,7 +33,7 @@ public class ClienteController {
                 ClienteDTO map = modelMapper.map(entity, ClienteDTO.class);
                 listDTO.add(map);
             }
-            return new ResponseEntity<>(listDTO, HttpStatus.FOUND);
+            return new ResponseEntity<>(listDTO, HttpStatus.OK);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
@@ -56,9 +56,9 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated ClienteDTO clienteDTO) {
+    public ResponseEntity<ClienteDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated ClienteDTO dto) {
         try {
-            return new ResponseEntity<>(service.update(id, clienteDTO), HttpStatus.OK);
+            return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }

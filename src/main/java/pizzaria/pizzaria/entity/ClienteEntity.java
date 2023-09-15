@@ -1,6 +1,5 @@
 package pizzaria.pizzaria.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,19 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "Cliente")
 public class ClienteEntity extends AbstractEntity {
-
     @Column(nullable = false, length = 50)
     private String nome;
 
     @Column(nullable = false, length = 15)
     private String cpf;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<EnderecoEntity> enderecos;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PedidoEntity> pedidos;
 }
 
