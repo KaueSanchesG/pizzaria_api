@@ -1,13 +1,19 @@
 package pizzaria.pizzaria.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pizzaria.pizzaria.dto.SaborDTO;
 import pizzaria.pizzaria.entity.SaborEntity;
 import pizzaria.pizzaria.repository.SaborRepository;
 import pizzaria.pizzaria.service.SaborService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/sabor")
@@ -16,47 +22,55 @@ public class SaborController {
     private SaborService service;
     @Autowired
     private SaborRepository repository;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    @GetMapping("/lista")
-    public ResponseEntity<?> list() {
-        return ResponseEntity.ok(this.repository.findAll());
+    @GetMapping("/list")
+    public ResponseEntity<List<SaborDTO>> list() {
+        try {
+            List<SaborDTO> listDTO = new ArrayList<>();
+            for (SaborEntity entity : repository.findAll()) {
+                SaborDTO map = modelMapper.map(entity, SaborDTO.class);
+                listDTO.add(map);
+            }
+            return new ResponseEntity<>(listDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<?> getIdByRequest(@RequestParam("id") final long id) {
-        final SaborEntity sabor = this.repository.findById(id).orElse(null);
-        return sabor == null ? ResponseEntity.badRequest().body("Nenhum registro encontrado") : ResponseEntity.ok(sabor);
+    public ResponseEntity<SaborDTO> getIdByRequest(@RequestParam("id") final long id) {
+        final SaborEntity entity = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+        return ResponseEntity.ok(modelMapper.map(entity, SaborDTO.class));
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody SaborDTO saborDTO) {
+    public ResponseEntity<SaborDTO> create(@RequestBody @Validated SaborDTO dto) {
         try {
-            service.create(saborDTO);
+            return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        return ResponseEntity.ok().body("Cadastro realizado com sucesso");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateByPath(@PathVariable("id") final Long id, @RequestBody final SaborDTO saborDTO) {
+    public ResponseEntity<SaborDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated SaborDTO dto) {
         try {
-            service.update(id, saborDTO);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.internalServerError().body("Error:" + e.getCause().getCause().getMessage());
-        } catch (RuntimeException e) {
-            return ResponseEntity.internalServerError().body("error:" + e.getMessage());
+            return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        return ResponseEntity.ok("Registro atualizado com sucesso");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") final Long id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") final Long id) {
         try {
-            service.delete(id);
+            SaborEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+            repository.delete(entity);
+            return ResponseEntity.ok(HttpStatus.OK);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("Não foi possivel deletar");
+            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, e.getMessage());
         }
-        return ResponseEntity.ok("Registro deletado!");
     }
 }
