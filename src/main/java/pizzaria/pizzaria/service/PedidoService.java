@@ -2,8 +2,10 @@ package pizzaria.pizzaria.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import pizzaria.pizzaria.dto.PedidoDTO;
 import pizzaria.pizzaria.dto.ProdutoDTO;
 import pizzaria.pizzaria.entity.PedidoEntity;
@@ -14,54 +16,40 @@ import java.time.LocalDateTime;
 @Service
 public class PedidoService {
     @Autowired
-    private PedidoRepository pedidoRepository;
+    private PedidoRepository repository;
     @Autowired
     private ModelMapper modelMapper;
 
-    private Double calcValorTotal(PedidoDTO pedidoDTO) {
-        Double vt = 0.0;
-        for (ProdutoDTO produto : pedidoDTO.getProdutos()) {
-            vt += produto.getValor().doubleValue();
+    private Double calcValorTotal(PedidoDTO dto) {
+        double total = 0.0;
+        for (ProdutoDTO produto : dto.getProdutos()) {
+            total += produto.getValor();
         }
-        return vt;
+        return total;
     }
 
     @Transactional
-    public PedidoEntity create(PedidoDTO pedidoDTO) {
-        pedidoDTO.setDataHora(LocalDateTime.now());
-        if (pedidoDTO.getId() != null) {
-            throw new RuntimeException("Deixe o campo Id vago, ele é gerado pelo banco");
+    public PedidoDTO create(PedidoDTO dto) {
+        dto.setDataHora(LocalDateTime.now());
+        if (dto.getId() != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deixe o campo Id vago, ele é gerado pelo banco");
         }
-        if (pedidoDTO.getCliente() == null) {
-            throw new RuntimeException("Você precisa de um cliente para fazer um pedido");
+        if (!dto.getProdutos().isEmpty()) {
+            double total = calcValorTotal(dto);
+            dto.setValorTotal(total);
         }
-        if (pedidoDTO.getFuncionario() == null) {
-            throw new RuntimeException("Você precisa de um funcionario para fazer um pedido");
-        }
-        if (!pedidoDTO.getProdutos().isEmpty()) {
-            Double vt = calcValorTotal(pedidoDTO);
-            pedidoDTO.setValorTotal(vt);
-        } else {
-            throw new RuntimeException("Para fazer um pedido, você precisa de um produto!!!");
-        }
-        PedidoEntity pedido = modelMapper.map(pedidoDTO, PedidoEntity.class);
-        return pedidoRepository.save(pedido);
+        return modelMapper.map(repository.save(modelMapper.map(dto, PedidoEntity.class)), PedidoDTO.class);
     }
 
     @Transactional
-    public void update(Long id, PedidoDTO pedidoDTO) {
-        PedidoEntity pedidoBanco = pedidoRepository.findById(id).orElseThrow(() -> new RuntimeException("Endereço de id não encontrado!!!"));
-        if (!pedidoBanco.getId().equals(pedidoDTO.getId())) {
-            throw new RuntimeException("Não foi possivel encontrar o registro!!!");
+    public PedidoDTO update(Long id, PedidoDTO dto) {
+        PedidoEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço de id não encontrado!!!"));
+        dto.setCadastro(dataBase.getCadastro());
+        dto.setDataHora(dataBase.getDataHora());
+        if (dto.getProdutos().size() != dataBase.getProdutos().size()) {
+            double totalUpdate = calcValorTotal(dto);
+            dto.setValorTotal(totalUpdate);
         }
-        modelMapper.map(pedidoDTO, pedidoBanco);
-        pedidoRepository.save(pedidoBanco);
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        PedidoEntity pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Não foi possivel encontrar o registro informado"));
-        pedidoRepository.delete(pedido);
+        return modelMapper.map(repository.save(modelMapper.map(dto, PedidoEntity.class)), PedidoDTO.class);
     }
 }

@@ -1,13 +1,19 @@
 package pizzaria.pizzaria.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pizzaria.pizzaria.dto.PedidoDTO;
 import pizzaria.pizzaria.entity.PedidoEntity;
 import pizzaria.pizzaria.repository.PedidoRepository;
 import pizzaria.pizzaria.service.PedidoService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/pedido")
@@ -16,46 +22,55 @@ public class PedidoController {
     private PedidoService service;
     @Autowired
     private PedidoRepository repository;
-    @GetMapping("/lista")
-    public ResponseEntity<?>list(){
-        return ResponseEntity.ok(this.repository.findAll());
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @GetMapping("/list")
+    public ResponseEntity<List<PedidoDTO>> list() {
+        try {
+            List<PedidoDTO> listDTO = new ArrayList<>();
+            for (PedidoEntity entity : repository.findAll()) {
+                PedidoDTO map = modelMapper.map(entity, PedidoDTO.class);
+                listDTO.add(map);
+            }
+            return new ResponseEntity<>(listDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
+
     @GetMapping
-    public ResponseEntity<?> getIdByRequest(@RequestParam("id") final long id){
-        final PedidoEntity pedido = this.repository.findById(id).orElse(null);
-        return pedido == null ? ResponseEntity.badRequest().body("Nenhum registro encontrado")  : ResponseEntity.ok(pedido);
+    public ResponseEntity<PedidoDTO> getIdByRequest(@RequestParam("id") final long id) {
+        final PedidoEntity entity = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+        return ResponseEntity.ok(modelMapper.map(entity, PedidoDTO.class));
     }
+
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody PedidoDTO pedidoDTO) {
+    public ResponseEntity<PedidoDTO> create(@RequestBody @Validated PedidoDTO dto) {
         try {
-            service.create(pedidoDTO);
+            return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        catch (Exception e){
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
-        }
-        return ResponseEntity.ok().body("Cadastro realizado com sucesso");
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateByPath(@PathVariable("id") final Long id, @RequestBody final PedidoDTO pedidoDTO) {
+    public ResponseEntity<PedidoDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated PedidoDTO dto) {
         try {
-            service.update(id, pedidoDTO);
+            return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        catch (DataIntegrityViolationException e){
-            return ResponseEntity.internalServerError().body("Error:" + e.getCause().getCause().getMessage());
-        }
-        catch (RuntimeException e){
-            return ResponseEntity.internalServerError().body("error:" + e.getMessage());
-        }
-        return ResponseEntity.ok("Registro atualizado com sucesso");
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") final Long id){
-        try{
-            service.delete(id);
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") final Long id) {
+        try {
+            PedidoEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+            repository.delete(entity);
+            return ResponseEntity.ok(HttpStatus.OK);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, e.getMessage());
         }
-        catch (RuntimeException e){
-            return ResponseEntity.badRequest().body("Não foi possivel deletar");
-        }
-        return ResponseEntity.ok("Registro deletado!");
     }
 }
