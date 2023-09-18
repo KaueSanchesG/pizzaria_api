@@ -22,6 +22,5 @@ public class ProdutoDTO extends AbstractDTO{
     @NotNull(message = "O campo nã pode ser nullo")
     @Positive(message = "O numero deve ser positivo")
     private Double valor;
-    private List<PedidoDTO> pedidos;
     private List<SaborDTO> pizzaSabor;
 }

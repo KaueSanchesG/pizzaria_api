@@ -1,5 +1,6 @@
 package pizzaria.pizzaria.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.List;
 public class PedidoDTO extends AbstractDTO{
     @NotNull(message = "Deve conter um cliente")
     private ClienteDTO cliente;
-    @NotNull(message = "Deve conter pelo menos um produto")
+    @NotEmpty(message = "Deve conter pelo menos um produto")
     private List<ProdutoDTO> produtos;
     private Boolean entrega;
     private Double valorTotal;

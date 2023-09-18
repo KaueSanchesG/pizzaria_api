@@ -15,5 +15,4 @@ public class SaborDTO extends AbstractDTO{
     @NotBlank(message = "O campo não pode ser nullo")
     @Size(min = 3, max = 50, message = "Nome do sabor deve ter entre 3 e 50 caracteres")
     private String nome;
-    private ProdutoDTO produto;
 }

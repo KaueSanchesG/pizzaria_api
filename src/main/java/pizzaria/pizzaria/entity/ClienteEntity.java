@@ -1,9 +1,7 @@
 package pizzaria.pizzaria.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -11,8 +9,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "Cliente")
 public class ClienteEntity extends AbstractEntity {
     @Column(nullable = false, length = 50)
