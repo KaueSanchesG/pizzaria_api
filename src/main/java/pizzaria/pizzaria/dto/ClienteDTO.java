@@ -23,9 +23,4 @@ public class ClienteDTO extends AbstractDTO{
     private String cpf;
     @JsonManagedReference
     private List<EnderecoDTO> enderecos;
-
-    public ClienteDTO(String nome, String cpf) {
-        this.nome = nome;
-        this.cpf = cpf;
-    }
 }
