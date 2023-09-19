@@ -12,7 +12,6 @@ import pizzaria.pizzaria.entity.FuncionarioEntity;
 import pizzaria.pizzaria.repository.FuncionarioRepository;
 import pizzaria.pizzaria.service.FuncionarioService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,22 +26,12 @@ public class FuncionarioController {
 
     @GetMapping("/list")
     public ResponseEntity<List<FuncionarioDTO>> list() {
-        try {
-            List<FuncionarioDTO> listDTO = new ArrayList<>();
-            for (FuncionarioEntity entity : repository.findAll()) {
-                FuncionarioDTO map = modelMapper.map(entity, FuncionarioDTO.class);
-                listDTO.add(map);
-            }
-            return new ResponseEntity<>(listDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<FuncionarioDTO> getIdByRequest(@RequestParam("id") final Long id) {
-        final FuncionarioEntity entity = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foi possivel encontrar o registro"));
-        return ResponseEntity.ok(modelMapper.map(entity, FuncionarioDTO.class));
+        return new ResponseEntity<>(service.getId(id), HttpStatus.OK);
     }
 
     @PostMapping

@@ -10,6 +10,9 @@ import pizzaria.pizzaria.dto.EnderecoDTO;
 import pizzaria.pizzaria.entity.EnderecoEntity;
 import pizzaria.pizzaria.repository.EnderecoRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class EnderecoService {
 
@@ -17,6 +20,22 @@ public class EnderecoService {
     private EnderecoRepository repository;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Transactional(readOnly = true)
+    public List<EnderecoDTO> getAll(){
+        List<EnderecoDTO> listDTO = new ArrayList<>();
+        for (EnderecoEntity entity : repository.findAll()) {
+            EnderecoDTO map = modelMapper.map(entity, EnderecoDTO.class);
+            listDTO.add(map);
+        }
+        return listDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public EnderecoDTO getId(Long id){
+        EnderecoEntity entity = repository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+        return modelMapper.map(entity, EnderecoDTO.class);
+    }
 
     @Transactional
     public EnderecoDTO create(EnderecoDTO enderecoDTO) {

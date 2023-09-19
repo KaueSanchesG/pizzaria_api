@@ -10,7 +10,9 @@ import pizzaria.pizzaria.dto.ClienteDTO;
 import pizzaria.pizzaria.entity.ClienteEntity;
 import pizzaria.pizzaria.repository.ClienteRepository;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 public class ClienteService {
@@ -18,6 +20,22 @@ public class ClienteService {
     private ClienteRepository repository;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Transactional(readOnly = true)
+    public List<ClienteDTO> getAll(){
+        List<ClienteDTO> listDTO = new ArrayList<>();
+        for (ClienteEntity entity : repository.findAll()) {
+            ClienteDTO map = modelMapper.map(entity, ClienteDTO.class);
+            listDTO.add(map);
+        }
+        return listDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public ClienteDTO getId(Long id){
+        ClienteEntity entity = repository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+        return modelMapper.map(entity, ClienteDTO.class);
+    }
 
     @Transactional
     public ClienteDTO create(ClienteDTO dto) {

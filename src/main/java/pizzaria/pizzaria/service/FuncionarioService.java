@@ -10,12 +10,31 @@ import pizzaria.pizzaria.dto.FuncionarioDTO;
 import pizzaria.pizzaria.entity.FuncionarioEntity;
 import pizzaria.pizzaria.repository.FuncionarioRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class FuncionarioService {
     @Autowired
     private FuncionarioRepository repository;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Transactional(readOnly = true)
+    public List<FuncionarioDTO> getAll() {
+        List<FuncionarioDTO> listDTO = new ArrayList<>();
+        for (FuncionarioEntity entity : repository.findAll()) {
+            FuncionarioDTO map = modelMapper.map(entity, FuncionarioDTO.class);
+            listDTO.add(map);
+        }
+        return listDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public FuncionarioDTO getId(Long id) {
+        FuncionarioEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foi possivel encontrar o registro"));
+        return modelMapper.map(entity, FuncionarioDTO.class);
+    }
 
     @Transactional
     public FuncionarioDTO create(FuncionarioDTO dto) {

@@ -12,6 +12,8 @@ import pizzaria.pizzaria.entity.PedidoEntity;
 import pizzaria.pizzaria.repository.PedidoRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PedidoService {
@@ -26,6 +28,22 @@ public class PedidoService {
             total += produto.getValor();
         }
         return total;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PedidoDTO> getAll() {
+        List<PedidoDTO> listDTO = new ArrayList<>();
+        for (PedidoEntity entity : repository.findAll()) {
+            PedidoDTO map = modelMapper.map(entity, PedidoDTO.class);
+            listDTO.add(map);
+        }
+        return listDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public PedidoDTO getId(Long id) {
+        PedidoEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foi possivel encontrar o registro"));
+        return modelMapper.map(entity, PedidoDTO.class);
     }
 
     @Transactional

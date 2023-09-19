@@ -27,22 +27,12 @@ public class ProdutoController {
 
     @GetMapping("/list")
     public ResponseEntity<List<ProdutoDTO>> list() {
-        try {
-            List<ProdutoDTO> listDTO = new ArrayList<>();
-            for (ProdutoEntity entity : repository.findAll()) {
-                ProdutoDTO map = modelMapper.map(entity, ProdutoDTO.class);
-                listDTO.add(map);
-            }
-            return new ResponseEntity<>(listDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<ProdutoDTO> getIdByRequest(@RequestParam("id") final long id) {
-        final ProdutoEntity entity = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-        return ResponseEntity.ok(modelMapper.map(entity, ProdutoDTO.class));
+        return new ResponseEntity<>(service.getId(id), HttpStatus.OK);
     }
 
     @PostMapping

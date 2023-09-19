@@ -27,23 +27,12 @@ public class ClienteController {
 
     @GetMapping("/list")
     public ResponseEntity<List<ClienteDTO>> list() {
-        try {
-            List<ClienteDTO> listDTO = new ArrayList<>();
-            for (ClienteEntity entity : repository.findAll()) {
-                ClienteDTO map = modelMapper.map(entity, ClienteDTO.class);
-                listDTO.add(map);
-            }
-            return new ResponseEntity<>(listDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<ClienteDTO> getIdByRequest(@RequestParam("id") final Long id) {
-        final ClienteEntity entity = this.repository.findById(id).orElse(null);
-        if (entity == null) ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não foi possivel encontrar o registro");
-        return ResponseEntity.ok(modelMapper.map(entity, ClienteDTO.class));
+        return new ResponseEntity<>(service.getId(id), HttpStatus.OK);
     }
 
     @PostMapping

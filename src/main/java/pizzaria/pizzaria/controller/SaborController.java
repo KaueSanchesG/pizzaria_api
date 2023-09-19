@@ -12,7 +12,6 @@ import pizzaria.pizzaria.entity.SaborEntity;
 import pizzaria.pizzaria.repository.SaborRepository;
 import pizzaria.pizzaria.service.SaborService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,22 +26,12 @@ public class SaborController {
 
     @GetMapping("/list")
     public ResponseEntity<List<SaborDTO>> list() {
-        try {
-            List<SaborDTO> listDTO = new ArrayList<>();
-            for (SaborEntity entity : repository.findAll()) {
-                SaborDTO map = modelMapper.map(entity, SaborDTO.class);
-                listDTO.add(map);
-            }
-            return new ResponseEntity<>(listDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<SaborDTO> getIdByRequest(@RequestParam("id") final long id) {
-        final SaborEntity entity = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-        return ResponseEntity.ok(modelMapper.map(entity, SaborDTO.class));
+        return new ResponseEntity<>(service.getId(id), HttpStatus.OK);
     }
 
     @PostMapping

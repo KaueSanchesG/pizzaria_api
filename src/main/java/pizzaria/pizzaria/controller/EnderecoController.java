@@ -27,22 +27,12 @@ public class EnderecoController {
 
     @GetMapping("/list")
     public ResponseEntity<List<EnderecoDTO>> list() {
-        try {
-            List<EnderecoDTO> listDTO = new ArrayList<>();
-            for (EnderecoEntity entity : repository.findAll()) {
-                EnderecoDTO map = modelMapper.map(entity, EnderecoDTO.class);
-                listDTO.add(map);
-            }
-            return new ResponseEntity<>(listDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-        }
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<EnderecoDTO> getIdByRequest(@RequestParam("id") final Long id) {
-        final EnderecoEntity entity = this.repository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foi possivel encontrar o registro"));
-        return ResponseEntity.ok(modelMapper.map(entity, EnderecoDTO.class));
+        return new ResponseEntity<>(service.getId(id), HttpStatus.OK);
     }
 
     @PostMapping

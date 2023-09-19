@@ -27,22 +27,12 @@ public class PedidoController {
 
     @GetMapping("/list")
     public ResponseEntity<List<PedidoDTO>> list() {
-        try {
-            List<PedidoDTO> listDTO = new ArrayList<>();
-            for (PedidoEntity entity : repository.findAll()) {
-                PedidoDTO map = modelMapper.map(entity, PedidoDTO.class);
-                listDTO.add(map);
-            }
-            return new ResponseEntity<>(listDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<PedidoDTO> getIdByRequest(@RequestParam("id") final long id) {
-        final PedidoEntity entity = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-        return ResponseEntity.ok(modelMapper.map(entity, PedidoDTO.class));
+        return new ResponseEntity<>(service.getId(id), HttpStatus.OK);
     }
 
     @PostMapping

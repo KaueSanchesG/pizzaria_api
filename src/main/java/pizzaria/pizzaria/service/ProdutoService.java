@@ -10,12 +10,31 @@ import pizzaria.pizzaria.dto.ProdutoDTO;
 import pizzaria.pizzaria.entity.ProdutoEntity;
 import pizzaria.pizzaria.repository.ProdutoRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ProdutoService {
     @Autowired
     private ProdutoRepository repository;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Transactional(readOnly = true)
+    public List<ProdutoDTO> getAll(){
+        List<ProdutoDTO> listDTO = new ArrayList<>();
+        for (ProdutoEntity entity : repository.findAll()) {
+            ProdutoDTO map = modelMapper.map(entity, ProdutoDTO.class);
+            listDTO.add(map);
+        }
+        return listDTO;
+    }
+
+    @Transactional(readOnly = true)
+    public ProdutoDTO getId(Long id){
+        ProdutoEntity entity = repository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+        return modelMapper.map(entity, ProdutoDTO.class);
+    }
 
     @Transactional
     public ProdutoDTO create(ProdutoDTO dto) {
