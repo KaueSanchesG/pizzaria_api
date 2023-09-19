@@ -1,0 +1,74 @@
+package pizzaria.pizzaria.serviceTest;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
+import org.springframework.boot.test.context.SpringBootTest;
+import pizzaria.pizzaria.dto.FuncionarioDTO;
+import pizzaria.pizzaria.entity.FuncionarioEntity;
+import pizzaria.pizzaria.repository.FuncionarioRepository;
+import pizzaria.pizzaria.service.FuncionarioService;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
+@SpringBootTest
+class FuncionarioTest {
+    @InjectMocks
+    private FuncionarioService service;
+
+    @Mock
+    private FuncionarioService serviceTest;
+
+    @Mock
+    private FuncionarioRepository repository;
+
+    @Mock
+    private ModelMapper modelMapper;
+
+    private FuncionarioEntity funcionario;
+    private FuncionarioDTO funcionarioDTO;
+
+    @BeforeEach
+    public void setup() {
+        modelMapper = new ModelMapper();
+        funcionario = new FuncionarioEntity();
+        funcionario.setNome("Kaue");
+        funcionarioDTO = new FuncionarioDTO("Kaue");
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void testList() {
+        List<FuncionarioEntity> listEntity = new ArrayList<>();
+        listEntity.add(funcionario);
+
+        when(repository.findAll()).thenReturn(listEntity);
+
+        List<FuncionarioDTO> resultList = service.getAll();
+        Assertions.assertEquals(1, resultList.size());
+    }
+
+    @Test
+    void getId() {
+        Long id = 1L;
+        FuncionarioDTO funcionario1 = new FuncionarioDTO();
+        funcionario1.setId(1L);
+        funcionario1.setNome("Kaue");
+
+        when(serviceTest.getId(anyLong())).thenReturn(funcionario1);
+        FuncionarioDTO result = serviceTest.getId(id);
+        assertNotNull(result);
+        Assertions.assertEquals(funcionario.getNome(), result.getNome());
+    }
+
+
+}
