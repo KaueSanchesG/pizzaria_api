@@ -1,6 +1,5 @@
 package pizzaria.pizzaria.controller;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import pizzaria.pizzaria.entity.ClienteEntity;
 import pizzaria.pizzaria.repository.ClienteRepository;
 import pizzaria.pizzaria.service.ClienteService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,8 +20,6 @@ public class ClienteController {
     private ClienteService service;
     @Autowired
     private ClienteRepository repository;
-    @Autowired
-    private ModelMapper modelMapper;
 
     @GetMapping("/list")
     public ResponseEntity<List<ClienteDTO>> list() {

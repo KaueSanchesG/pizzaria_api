@@ -22,6 +22,6 @@ public class EnderecoDTO extends AbstractDTO{
     @Positive(message = "O numero deve ser positivo")
     private int numero;
     @JsonBackReference
-    @NotNull(message = "O campo n pode ser nullo")
+//    @NotNull(message = "O campo n pode ser nullo")
     private ClienteDTO cliente;
 }

@@ -1,6 +1,5 @@
 package pizzaria.pizzaria.controller;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +20,6 @@ public class FuncionarioController {
     private FuncionarioService service;
     @Autowired
     private FuncionarioRepository repository;
-    @Autowired
-    private ModelMapper modelMapper;
 
     @GetMapping("/list")
     public ResponseEntity<List<FuncionarioDTO>> list() {
