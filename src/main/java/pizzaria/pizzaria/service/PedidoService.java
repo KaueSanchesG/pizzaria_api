@@ -22,7 +22,7 @@ public class PedidoService {
     @Autowired
     private ModelMapper modelMapper;
 
-    private Double calcValorTotal(PedidoDTO dto) {
+    public Double calcValorTotal(PedidoDTO dto) {
         double total = 0.0;
         for (ProdutoDTO produto : dto.getProdutos()) {
             total += produto.getValor();

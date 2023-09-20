@@ -51,13 +51,7 @@ public class ClienteService {
     @Transactional
     public ClienteDTO update(Long id, ClienteDTO clienteDTO) {
         ClienteEntity database = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço de id não encontrado!!!"));
-        if (!database.getId().equals(clienteDTO.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O endereço não consta no banco!!");
-        }
         clienteDTO.setCadastro(database.getCadastro());
-        if (clienteDTO.getCpf()==null){
-            clienteDTO.setCpf(database.getCpf());
-        }
         return modelMapper.map(repository.save(modelMapper.map(clienteDTO, ClienteEntity.class)), ClienteDTO.class);
     }
 }

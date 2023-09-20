@@ -47,7 +47,7 @@ public class EnderecoService {
 
     @Transactional
     public EnderecoDTO update(Long id, EnderecoDTO enderecoDTO) {
-        EnderecoEntity dataBase = repository.findById(id).orElseThrow(() -> new RuntimeException("Endereço de id não encontrado!!!"));
+        EnderecoEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço de id não encontrado!!!"));
         if (!dataBase.getId().equals(enderecoDTO.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O endereço não consta no banco!!");
         }
