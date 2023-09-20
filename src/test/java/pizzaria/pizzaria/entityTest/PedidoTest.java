@@ -9,6 +9,7 @@ import pizzaria.pizzaria.entity.FuncionarioEntity;
 import pizzaria.pizzaria.entity.PedidoEntity;
 import pizzaria.pizzaria.entity.ProdutoEntity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
@@ -34,6 +35,8 @@ class PedidoTest {
         funcionario.setNome("Pedro");
         pedido.setCliente(cliente);
         pedido.setEntrega(true);
+        pedido.setValorTotal(12.0);
+        pedido.setDataHora(LocalDateTime.now());
         pedido.setFuncionario(funcionario);
         pedido.setProdutos(List.of(new ProdutoEntity()));
     }
