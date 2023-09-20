@@ -10,7 +10,7 @@ import pizzaria.pizzaria.entity.PedidoEntity;
 import java.util.List;
 
 @SpringBootTest
-class FuncionarioTest {
+class FuncionarioEntityTest {
     FuncionarioEntity funcionario = new FuncionarioEntity();
 
     @BeforeEach

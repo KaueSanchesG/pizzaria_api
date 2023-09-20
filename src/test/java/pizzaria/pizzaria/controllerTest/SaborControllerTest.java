@@ -12,8 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.server.ResponseStatusException;
-import pizzaria.pizzaria.dto.ClienteDTO;
-import pizzaria.pizzaria.service.ClienteService;
+import pizzaria.pizzaria.dto.SaborDTO;
+import pizzaria.pizzaria.service.SaborService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,100 +21,100 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ClienteTest {
+class SaborControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private ClienteService service;
+    private SaborService service;
 
     private ObjectMapper objectMapper;
-    private ClienteDTO clienteValido;
-    private ClienteDTO clienteInvalido;
+    private SaborDTO saborValido;
+    private SaborDTO saborInvalido;
 
     @BeforeEach
     public void setup() {
         objectMapper = new ObjectMapper();
-        clienteValido = new ClienteDTO("Gusta", "826.535.545-93", null);
-        clienteInvalido = new ClienteDTO("", "826.535.545-93", null);
+        saborValido = new SaborDTO("Peperoni");
+        saborInvalido = new SaborDTO("");
     }
 
     @Test
     void testList() throws Exception {
-        List<ClienteDTO> clienteDTOList = new ArrayList<>();
-        clienteDTOList.add(clienteValido);
-        when(service.getAll()).thenReturn(clienteDTOList);
+        List<SaborDTO> saborDTOList = new ArrayList<>();
+        saborDTOList.add(saborValido);
+        when(service.getAll()).thenReturn(saborDTOList);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/cliente/list"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/sabor/list"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].nome").value("Gusta"));
+                .andExpect(jsonPath("$[0].nome").value("Peperoni"));
     }
 
     @Test
-    void testGetById() throws Exception {
+    void testGetFuncionarioById() throws Exception {
         Long id = 1L;
 
-        when(service.getId(id)).thenReturn(clienteValido);
+        when(service.getId(id)).thenReturn(saborValido);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/cliente?id=" + id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/sabor?id=" + id))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.nome").value("Gusta"));
+                .andExpect(jsonPath("$.nome").value("Peperoni"));
     }
 
     @Test
-    void testCreate() throws Exception {
-        when(service.create(any(ClienteDTO.class))).thenReturn(clienteValido);
+    void testCreateFuncionario() throws Exception {
+        when(service.create(any(SaborDTO.class))).thenReturn(saborValido);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/cliente")
+        mockMvc.perform(MockMvcRequestBuilders.post("/sabor")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(clienteValido)))
+                        .content(objectMapper.writeValueAsString(saborValido)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.nome").value("Gusta"))
+                .andExpect(jsonPath("$.nome").value("Peperoni"))
                 .andReturn();
 
-        when(service.create(any(ClienteDTO.class)))
+        when(service.create(any(SaborDTO.class)))
                 .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Test message"));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/cliente")
+        mockMvc.perform(MockMvcRequestBuilders.post("/sabor")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(clienteInvalido)))
+                        .content(objectMapper.writeValueAsString(saborInvalido)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        when(service.create(any(ClienteDTO.class)))
+        when(service.create(any(SaborDTO.class)))
                 .thenThrow(new RuntimeException("Algo deu errado"));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/cliente")
+        mockMvc.perform(MockMvcRequestBuilders.post("/sabor")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(clienteInvalido)))
+                        .content(objectMapper.writeValueAsString(saborInvalido)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    void testUpdate() throws Exception {
+    void testUpdateFuncionario() throws Exception {
         Long id = 1L;
-        ClienteDTO clienteDTO = new ClienteDTO("Gusta1", "826.535.545-93", null);
+        SaborDTO saborDTO = new SaborDTO("Calabresa");
 
-        when(service.update(id, clienteDTO)).thenReturn(clienteDTO);
+        when(service.update(id, saborDTO)).thenReturn(saborDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/cliente/{id}", id)
+        mockMvc.perform(MockMvcRequestBuilders.put("/sabor/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(clienteDTO)))
+                        .content(objectMapper.writeValueAsString(saborDTO)))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void testDelete() throws Exception {
+    void testDeleteFuncionario() throws Exception {
         Long id = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/cliente/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/sabor/{id}", id))
                 .andExpect(status().is(405));
     }
 }

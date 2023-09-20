@@ -10,7 +10,7 @@ import pizzaria.pizzaria.entity.SaborEntity;
 import java.util.List;
 
 @SpringBootTest
-class SaborTest {
+class SaborEntityTest {
     SaborEntity sabor = new SaborEntity();
 
     @BeforeEach

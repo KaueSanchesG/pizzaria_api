@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class PizzariaApplicationTests {
 	/**
-	 * this is a silly test to prevent code smell when verifying with SonarQube + JaCoCo
+	 * this is a silly test to prevent code smells when verifying with SonarQube + JaCoCo
 	 */
 	@Test
 	void contextLoads() {

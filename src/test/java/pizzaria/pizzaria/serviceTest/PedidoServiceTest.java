@@ -21,18 +21,16 @@ import pizzaria.pizzaria.entity.ProdutoEntity;
 import pizzaria.pizzaria.repository.PedidoRepository;
 import pizzaria.pizzaria.service.PedidoService;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class PedidoTest {
+class PedidoServiceTest {
     @InjectMocks
     private PedidoService service;
 

@@ -12,8 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.server.ResponseStatusException;
-import pizzaria.pizzaria.dto.SaborDTO;
-import pizzaria.pizzaria.service.SaborService;
+import pizzaria.pizzaria.dto.ClienteDTO;
+import pizzaria.pizzaria.dto.EnderecoDTO;
+import pizzaria.pizzaria.service.EnderecoService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,97 +25,98 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class SaborTest {
-
+class EnderecoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private SaborService service;
+    private EnderecoService service;
 
     private ObjectMapper objectMapper;
-    private SaborDTO saborValido;
-    private SaborDTO saborInvalido;
+    private EnderecoDTO enderecoValido;
+    private EnderecoDTO enderecoInvalido;
 
     @BeforeEach
     public void setup() {
         objectMapper = new ObjectMapper();
-        saborValido = new SaborDTO("Peperoni");
-        saborInvalido = new SaborDTO("");
+        ClienteDTO cliente = new ClienteDTO("kaue", "826.535.545-93", null);
+        enderecoValido = new EnderecoDTO("Marcolina123", 12, cliente);
+        enderecoInvalido = new EnderecoDTO("", 0, cliente);
     }
+
 
     @Test
     void testList() throws Exception {
-        List<SaborDTO> saborDTOList = new ArrayList<>();
-        saborDTOList.add(saborValido);
-        when(service.getAll()).thenReturn(saborDTOList);
+        List<EnderecoDTO> enderecoDTOList = new ArrayList<>();
+        enderecoDTOList.add(enderecoValido);
+        when(service.getAll()).thenReturn(enderecoDTOList);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/sabor/list"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/endereco/list"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].nome").value("Peperoni"));
+                .andExpect(jsonPath("$[0].rua").value("Marcolina123"));
     }
 
     @Test
-    void testGetFuncionarioById() throws Exception {
+    void testGetById() throws Exception {
         Long id = 1L;
 
-        when(service.getId(id)).thenReturn(saborValido);
+        when(service.getId(id)).thenReturn(enderecoValido);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/sabor?id=" + id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/endereco?id=" + id))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.nome").value("Peperoni"));
+                .andExpect(jsonPath("$.rua").value("Marcolina123"));
     }
 
     @Test
-    void testCreateFuncionario() throws Exception {
-        when(service.create(any(SaborDTO.class))).thenReturn(saborValido);
+    void testCreate() throws Exception {
+        when(service.create(any(EnderecoDTO.class))).thenReturn(enderecoValido);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/sabor")
+        mockMvc.perform(MockMvcRequestBuilders.post("/endereco")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(saborValido)))
+                        .content(objectMapper.writeValueAsString(enderecoValido)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.nome").value("Peperoni"))
+                .andExpect(jsonPath("$.rua").value("Marcolina123"))
                 .andReturn();
 
-        when(service.create(any(SaborDTO.class)))
+        when(service.create(any(EnderecoDTO.class)))
                 .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Test message"));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/sabor")
+        mockMvc.perform(MockMvcRequestBuilders.post("/endereco")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(saborInvalido)))
+                        .content(objectMapper.writeValueAsString(enderecoInvalido)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        when(service.create(any(SaborDTO.class)))
+        when(service.create(any(EnderecoDTO.class)))
                 .thenThrow(new RuntimeException("Algo deu errado"));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/sabor")
+        mockMvc.perform(MockMvcRequestBuilders.post("/endereco")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(saborInvalido)))
+                        .content(objectMapper.writeValueAsString(enderecoInvalido)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    void testUpdateFuncionario() throws Exception {
+    void testUpdate() throws Exception {
         Long id = 1L;
-        SaborDTO saborDTO = new SaborDTO("Calabresa");
+        EnderecoDTO enderecoDTO = new EnderecoDTO("Marcolina1234", 12, new ClienteDTO("kaue", "826.535.545-93", null));
 
-        when(service.update(id, saborDTO)).thenReturn(saborDTO);
+        when(service.update(id, enderecoDTO)).thenReturn(enderecoDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/sabor/{id}", id)
+        mockMvc.perform(MockMvcRequestBuilders.put("/endereco/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(saborDTO)))
+                        .content(objectMapper.writeValueAsString(enderecoDTO)))
                 .andExpect(status().isOk());
     }
 
     @Test
-    void testDeleteFuncionario() throws Exception {
+    void testDelete() throws Exception {
         Long id = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/sabor/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/endereco/{id}", id))
                 .andExpect(status().is(405));
     }
 }

@@ -4,15 +4,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import pizzaria.pizzaria.entity.ClienteEntity;
-import pizzaria.pizzaria.entity.EnderecoEntity;
 import pizzaria.pizzaria.entity.PedidoEntity;
+import pizzaria.pizzaria.entity.ProdutoEntity;
+import pizzaria.pizzaria.entity.SaborEntity;
 
 import java.util.List;
 
 @SpringBootTest
-class ClienteTest {
-    ClienteEntity cliente = new ClienteEntity();
+class ProdutoEntityTest {
+    ProdutoEntity produto = new ProdutoEntity();
 
     @BeforeEach
     public void setup() {
@@ -21,13 +21,13 @@ class ClienteTest {
 
     @Test
     void setterTest() {
-        Assertions.assertEquals(2, cliente.getEnderecos().size() + cliente.getPedidos().size());
+        Assertions.assertEquals(2, produto.getPedidos().size() + produto.getPizzaSabor().size());
     }
 
     private void initClass() {
-        cliente.setNome("Kaue");
-        cliente.setCpf("303.453.645-38");
-        cliente.setEnderecos(List.of(new EnderecoEntity()));
-        cliente.setPedidos(List.of(new PedidoEntity()));
+        produto.setNome("Pizza");
+        produto.setValor(12.0);
+        produto.setPedidos(List.of(new PedidoEntity()));
+        produto.setPizzaSabor(List.of(new SaborEntity()));
     }
 }

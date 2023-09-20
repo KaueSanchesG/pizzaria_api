@@ -6,26 +6,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import pizzaria.pizzaria.entity.ClienteEntity;
 import pizzaria.pizzaria.entity.EnderecoEntity;
+import pizzaria.pizzaria.entity.PedidoEntity;
+
+import java.util.List;
 
 @SpringBootTest
-class EnderecoTest {
-    EnderecoEntity endereco = new EnderecoEntity();
+class ClienteEntityTest {
+    ClienteEntity cliente = new ClienteEntity();
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         initClass();
     }
 
     @Test
-    void setterTest(){
-        Assertions.assertEquals("Kaue", endereco.getCliente().getNome());
+    void setterTest() {
+        Assertions.assertEquals(2, cliente.getEnderecos().size() + cliente.getPedidos().size());
     }
 
     private void initClass() {
-        ClienteEntity cliente = new ClienteEntity();
         cliente.setNome("Kaue");
-        endereco.setRua("Marcolina");
-        endereco.setNumero(12);
-        endereco.setCliente(cliente);
+        cliente.setCpf("303.453.645-38");
+        cliente.setEnderecos(List.of(new EnderecoEntity()));
+        cliente.setPedidos(List.of(new PedidoEntity()));
     }
 }

@@ -10,11 +10,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import pizzaria.pizzaria.dto.ClienteDTO;
-import pizzaria.pizzaria.dto.EnderecoDTO;
-import pizzaria.pizzaria.entity.EnderecoEntity;
-import pizzaria.pizzaria.repository.EnderecoRepository;
-import pizzaria.pizzaria.service.EnderecoService;
+import pizzaria.pizzaria.dto.FuncionarioDTO;
+import pizzaria.pizzaria.entity.FuncionarioEntity;
+import pizzaria.pizzaria.repository.FuncionarioRepository;
+import pizzaria.pizzaria.service.FuncionarioService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,62 +24,60 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class EnderecoTest {
+class FuncionarioServiceTest {
     @InjectMocks
-    private EnderecoService service;
+    private FuncionarioService service;
 
     @Mock
-    private EnderecoService serviceTest;
+    private FuncionarioService serviceTest;
 
     @Mock
-    private EnderecoRepository repository;
+    private FuncionarioRepository repository;
 
     @Mock
     private ModelMapper modelMapper;
 
-    private EnderecoEntity endereco;
-    private EnderecoDTO enderecoDTO;
+    private FuncionarioEntity funcionario;
+    private FuncionarioDTO funcionarioDTO;
 
     @BeforeEach
-    private void setup(){
+    public void setup() {
         modelMapper = new ModelMapper();
-        endereco = new EnderecoEntity();
-        endereco.setRua("Marcolina");
-        endereco.setNumero(12);
-        enderecoDTO = new EnderecoDTO("Marcolina", 12, new ClienteDTO("Kaue", "826.535.545-93", null));
+        funcionario = new FuncionarioEntity();
+        funcionario.setNome("Kaue");
+        funcionarioDTO = new FuncionarioDTO("Kaue");
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testList() {
-        List<EnderecoEntity> listEntity = new ArrayList<>();
-        listEntity.add(endereco);
+        List<FuncionarioEntity> listEntity = new ArrayList<>();
+        listEntity.add(funcionario);
 
         when(repository.findAll()).thenReturn(listEntity);
 
-        List<EnderecoDTO> resultList = service.getAll();
+        List<FuncionarioDTO> resultList = service.getAll();
         Assertions.assertEquals(1, resultList.size());
     }
 
     @Test
     void getId() {
         Long id = 1L;
-        EnderecoDTO enderecoNew = new EnderecoDTO();
-        enderecoNew.setId(1L);
-        enderecoNew.setRua("Marcolina");
-        enderecoNew.setNumero(12);
+        FuncionarioDTO funcionario1 = new FuncionarioDTO();
+        funcionario1.setId(1L);
+        funcionario1.setNome("Kaue");
 
-        when(serviceTest.getId(anyLong())).thenReturn(enderecoNew);
-        EnderecoDTO result = serviceTest.getId(id);
+        when(serviceTest.getId(anyLong())).thenReturn(funcionario1);
+        FuncionarioDTO result = serviceTest.getId(id);
         assertNotNull(result);
-        Assertions.assertEquals(endereco.getRua(), result.getRua());
+        Assertions.assertEquals(funcionario.getNome(), result.getNome());
     }
 
     @Test
     void testCreateException() {
-        enderecoDTO.setId(1L);
+        funcionarioDTO.setId(1L);
 
-        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(enderecoDTO));
+        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(funcionarioDTO));
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
@@ -91,7 +88,7 @@ class EnderecoTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, enderecoDTO));
+        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, funcionarioDTO));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 }

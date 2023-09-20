@@ -13,8 +13,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.server.ResponseStatusException;
 import pizzaria.pizzaria.dto.ClienteDTO;
-import pizzaria.pizzaria.dto.EnderecoDTO;
-import pizzaria.pizzaria.service.EnderecoService;
+import pizzaria.pizzaria.dto.FuncionarioDTO;
+import pizzaria.pizzaria.dto.PedidoDTO;
+import pizzaria.pizzaria.dto.ProdutoDTO;
+import pizzaria.pizzaria.service.PedidoService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,90 +27,96 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class EnderecoTest {
+class PedidoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private EnderecoService service;
+    private PedidoService service;
 
     private ObjectMapper objectMapper;
-    private EnderecoDTO enderecoValido;
-    private EnderecoDTO enderecoInvalido;
+    private PedidoDTO pedidoValido;
+    private PedidoDTO pedidoInvalido;
 
     @BeforeEach
     public void setup() {
         objectMapper = new ObjectMapper();
-        ClienteDTO cliente = new ClienteDTO("kaue", "826.535.545-93", null);
-        enderecoValido = new EnderecoDTO("Marcolina123", 12, cliente);
-        enderecoInvalido = new EnderecoDTO("", 0, cliente);
-    }
 
+        ProdutoDTO produto = new ProdutoDTO("Banana", 12.0, null);
+        FuncionarioDTO funcionario = new FuncionarioDTO("Funcionario1");
+        ClienteDTO cliente = new ClienteDTO("Kaue", "361.261.706-01", null);
+
+        pedidoValido = new PedidoDTO(cliente, List.of(produto), true, 0.0, null, funcionario);
+        pedidoInvalido = new PedidoDTO(cliente, null, true, 0.0, null, funcionario);
+    }
 
     @Test
     void testList() throws Exception {
-        List<EnderecoDTO> enderecoDTOList = new ArrayList<>();
-        enderecoDTOList.add(enderecoValido);
-        when(service.getAll()).thenReturn(enderecoDTOList);
+        List<PedidoDTO> pedidoDTOList = new ArrayList<>();
+        pedidoDTOList.add(pedidoValido);
+        when(service.getAll()).thenReturn(pedidoDTOList);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/endereco/list"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/pedido/list"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].rua").value("Marcolina123"));
+                .andExpect(jsonPath("$[0].cliente.nome").value("Kaue"));
     }
 
     @Test
     void testGetById() throws Exception {
         Long id = 1L;
 
-        when(service.getId(id)).thenReturn(enderecoValido);
+        when(service.getId(id)).thenReturn(pedidoValido);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/endereco?id=" + id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/pedido?id=" + id))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.rua").value("Marcolina123"));
+                .andExpect(jsonPath("$.cliente.nome").value("Kaue"));
     }
 
     @Test
     void testCreate() throws Exception {
-        when(service.create(any(EnderecoDTO.class))).thenReturn(enderecoValido);
+        when(service.create(any(PedidoDTO.class))).thenReturn(pedidoValido);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/endereco")
+        mockMvc.perform(MockMvcRequestBuilders.post("/pedido")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(enderecoValido)))
+                        .content(objectMapper.writeValueAsString(pedidoValido)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.rua").value("Marcolina123"))
+                .andExpect(jsonPath("$.cliente.nome").value("Kaue"))
                 .andReturn();
 
-        when(service.create(any(EnderecoDTO.class)))
+        when(service.create(any(PedidoDTO.class)))
                 .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Test message"));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/endereco")
+        mockMvc.perform(MockMvcRequestBuilders.post("/pedido")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(enderecoInvalido)))
+                        .content(objectMapper.writeValueAsString(pedidoInvalido)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-        when(service.create(any(EnderecoDTO.class)))
+        when(service.create(any(PedidoDTO.class)))
                 .thenThrow(new RuntimeException("Algo deu errado"));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/endereco")
+        mockMvc.perform(MockMvcRequestBuilders.post("/pedido")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(enderecoInvalido)))
+                        .content(objectMapper.writeValueAsString(pedidoInvalido)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testUpdate() throws Exception {
         Long id = 1L;
-        EnderecoDTO enderecoDTO = new EnderecoDTO("Marcolina1234", 12, new ClienteDTO("kaue", "826.535.545-93", null));
 
-        when(service.update(id, enderecoDTO)).thenReturn(enderecoDTO);
+        ProdutoDTO produtoDTO = new ProdutoDTO("Banana", 12.0, null);
+        FuncionarioDTO funcionarioDTO = new FuncionarioDTO("Funcionario1");
+        ClienteDTO clienteDTO = new ClienteDTO("Kaue", "361.261.706-01", null);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/endereco/{id}", id)
+        PedidoDTO pedidoDTO = new PedidoDTO(clienteDTO, List.of(produtoDTO), true, 1.0, null, funcionarioDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/pedido/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(enderecoDTO)))
+                        .content(objectMapper.writeValueAsString(pedidoDTO)))
                 .andExpect(status().isOk());
     }
 
@@ -116,7 +124,8 @@ class EnderecoTest {
     void testDelete() throws Exception {
         Long id = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/endereco/{id}", id))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/pedido/{id}", id))
                 .andExpect(status().is(405));
     }
+
 }

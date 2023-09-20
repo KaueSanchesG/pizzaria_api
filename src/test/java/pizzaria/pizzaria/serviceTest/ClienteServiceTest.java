@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class ClienteTest {
+class ClienteServiceTest {
     @InjectMocks
     private ClienteService service;
 

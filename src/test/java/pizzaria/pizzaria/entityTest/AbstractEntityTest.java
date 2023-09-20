@@ -9,7 +9,7 @@ import pizzaria.pizzaria.entity.AbstractEntity;
 import java.time.LocalDateTime;
 
 @SpringBootTest
-class AbstractTest {
+class AbstractEntityTest {
     AbstractEntity anAbstract = new AbstractEntity();
 
     @BeforeEach

@@ -10,10 +10,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import pizzaria.pizzaria.dto.FuncionarioDTO;
-import pizzaria.pizzaria.entity.FuncionarioEntity;
-import pizzaria.pizzaria.repository.FuncionarioRepository;
-import pizzaria.pizzaria.service.FuncionarioService;
+import pizzaria.pizzaria.dto.ProdutoDTO;
+import pizzaria.pizzaria.entity.ProdutoEntity;
+import pizzaria.pizzaria.repository.ProdutoRepository;
+import pizzaria.pizzaria.service.ProdutoService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,60 +24,62 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class FuncionarioTest {
+class ProdutoServiceTest {
     @InjectMocks
-    private FuncionarioService service;
+    private ProdutoService service;
 
     @Mock
-    private FuncionarioService serviceTest;
+    private ProdutoService serviceTest;
 
     @Mock
-    private FuncionarioRepository repository;
+    private ProdutoRepository repository;
 
     @Mock
     private ModelMapper modelMapper;
 
-    private FuncionarioEntity funcionario;
-    private FuncionarioDTO funcionarioDTO;
+    private ProdutoEntity produto;
+    private ProdutoDTO produtoDTO;
 
     @BeforeEach
-    public void setup() {
+    public void setup(){
         modelMapper = new ModelMapper();
-        funcionario = new FuncionarioEntity();
-        funcionario.setNome("Kaue");
-        funcionarioDTO = new FuncionarioDTO("Kaue");
+        produto = new ProdutoEntity();
+        produto.setNome("Pizza");
+        produto.setValor(12.0);
+        produtoDTO = new ProdutoDTO("Pizza", 12.0, null);
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testList() {
-        List<FuncionarioEntity> listEntity = new ArrayList<>();
-        listEntity.add(funcionario);
+        List<ProdutoEntity> listEntity = new ArrayList<>();
+        listEntity.add(produto);
 
         when(repository.findAll()).thenReturn(listEntity);
 
-        List<FuncionarioDTO> resultList = service.getAll();
+        List<ProdutoDTO> resultList = service.getAll();
         Assertions.assertEquals(1, resultList.size());
     }
 
     @Test
     void getId() {
         Long id = 1L;
-        FuncionarioDTO funcionario1 = new FuncionarioDTO();
-        funcionario1.setId(1L);
-        funcionario1.setNome("Kaue");
+        ProdutoDTO produtoNew = new ProdutoDTO();
+        produtoNew.setId(1L);
+        produtoNew.setNome("Pizza");
+        produtoNew.setValor(12.0);
 
-        when(serviceTest.getId(anyLong())).thenReturn(funcionario1);
-        FuncionarioDTO result = serviceTest.getId(id);
+        when(serviceTest.getId(anyLong())).thenReturn(produtoNew);
+        ProdutoDTO result = serviceTest.getId(id);
         assertNotNull(result);
-        Assertions.assertEquals(funcionario.getNome(), result.getNome());
+        Assertions.assertEquals(produto.getNome(), result.getNome());
     }
 
     @Test
     void testCreateException() {
-        funcionarioDTO.setId(1L);
+        produtoDTO.setId(1L);
 
-        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(funcionarioDTO));
+        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(produtoDTO));
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
@@ -88,7 +90,7 @@ class FuncionarioTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, funcionarioDTO));
+        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, produtoDTO));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 }

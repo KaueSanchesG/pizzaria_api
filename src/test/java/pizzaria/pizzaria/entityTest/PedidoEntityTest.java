@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
-class PedidoTest {
+class PedidoEntityTest {
     PedidoEntity pedido = new PedidoEntity();
 
     @BeforeEach

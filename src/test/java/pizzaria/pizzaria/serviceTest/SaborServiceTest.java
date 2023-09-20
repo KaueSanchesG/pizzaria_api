@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class SaborTest {
+class SaborServiceTest {
     @InjectMocks
     private SaborService service;
 
