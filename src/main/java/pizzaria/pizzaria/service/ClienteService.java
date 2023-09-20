@@ -50,7 +50,7 @@ public class ClienteService {
 
     @Transactional
     public ClienteDTO update(Long id, ClienteDTO clienteDTO) {
-        ClienteEntity database = repository.findById(id).orElseThrow(() -> new RuntimeException("Endereço de id não encontrado!!!"));
+        ClienteEntity database = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço de id não encontrado!!!"));
         if (!database.getId().equals(clienteDTO.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O endereço não consta no banco!!");
         }

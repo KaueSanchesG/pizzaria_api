@@ -10,10 +10,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import pizzaria.pizzaria.dto.FuncionarioDTO;
-import pizzaria.pizzaria.entity.FuncionarioEntity;
-import pizzaria.pizzaria.repository.FuncionarioRepository;
-import pizzaria.pizzaria.service.FuncionarioService;
+import pizzaria.pizzaria.dto.ClienteDTO;
+import pizzaria.pizzaria.entity.ClienteEntity;
+import pizzaria.pizzaria.repository.ClienteRepository;
+import pizzaria.pizzaria.service.ClienteService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,60 +24,61 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class FuncionarioTest {
+class ClienteTest {
     @InjectMocks
-    private FuncionarioService service;
+    private ClienteService service;
 
     @Mock
-    private FuncionarioService serviceTest;
+    private ClienteService serviceTest;
 
     @Mock
-    private FuncionarioRepository repository;
+    private ClienteRepository repository;
 
     @Mock
     private ModelMapper modelMapper;
 
-    private FuncionarioEntity funcionario;
-    private FuncionarioDTO funcionarioDTO;
+    private ClienteEntity cliente;
+    private ClienteDTO clienteDTO;
 
     @BeforeEach
-    public void setup() {
+    public void setup(){
         modelMapper = new ModelMapper();
-        funcionario = new FuncionarioEntity();
-        funcionario.setNome("Kaue");
-        funcionarioDTO = new FuncionarioDTO("Kaue");
+        cliente = new ClienteEntity();
+        cliente.setNome("Kaue");
+        cliente.setCpf("826.535.545-93");
+        clienteDTO = new ClienteDTO("Kaue", "826.535.545-93", null);
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testList() {
-        List<FuncionarioEntity> listEntity = new ArrayList<>();
-        listEntity.add(funcionario);
+        List<ClienteEntity> listEntity = new ArrayList<>();
+        listEntity.add(cliente);
 
         when(repository.findAll()).thenReturn(listEntity);
 
-        List<FuncionarioDTO> resultList = service.getAll();
+        List<ClienteDTO> resultList = service.getAll();
         Assertions.assertEquals(1, resultList.size());
     }
 
     @Test
     void getId() {
         Long id = 1L;
-        FuncionarioDTO funcionario1 = new FuncionarioDTO();
-        funcionario1.setId(1L);
-        funcionario1.setNome("Kaue");
+        ClienteDTO cliente1 = new ClienteDTO();
+        cliente1.setId(1L);
+        cliente1.setNome("Kaue");
 
-        when(serviceTest.getId(anyLong())).thenReturn(funcionario1);
-        FuncionarioDTO result = serviceTest.getId(id);
+        when(serviceTest.getId(anyLong())).thenReturn(cliente1);
+        ClienteDTO result = serviceTest.getId(id);
         assertNotNull(result);
-        Assertions.assertEquals(funcionario.getNome(), result.getNome());
+        Assertions.assertEquals(cliente.getNome(), result.getNome());
     }
 
     @Test
     void testCreateException() {
-        funcionarioDTO.setId(1L);
+        clienteDTO.setId(1L);
 
-        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(funcionarioDTO));
+        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(clienteDTO));
 
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
@@ -88,7 +89,7 @@ class FuncionarioTest {
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, funcionarioDTO));
+        ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, clienteDTO));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 }
