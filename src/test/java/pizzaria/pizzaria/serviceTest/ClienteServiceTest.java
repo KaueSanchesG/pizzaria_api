@@ -41,7 +41,7 @@ class ClienteServiceTest {
     private ClienteDTO clienteDTO;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         modelMapper = new ModelMapper();
         cliente = new ClienteEntity();
         cliente.setNome("Kaue");
@@ -64,11 +64,11 @@ class ClienteServiceTest {
     @Test
     void getId() {
         Long id = 1L;
-        ClienteDTO cliente1 = new ClienteDTO();
-        cliente1.setId(1L);
-        cliente1.setNome("Kaue");
+        ClienteDTO clienteNew = new ClienteDTO();
+        clienteNew.setId(1L);
+        clienteNew.setNome("Kaue");
 
-        when(serviceTest.getId(anyLong())).thenReturn(cliente1);
+        when(serviceTest.getId(anyLong())).thenReturn(clienteNew);
         ClienteDTO result = serviceTest.getId(id);
         assertNotNull(result);
         Assertions.assertEquals(cliente.getNome(), result.getNome());
@@ -77,9 +77,7 @@ class ClienteServiceTest {
     @Test
     void testCreateException() {
         clienteDTO.setId(1L);
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(clienteDTO));
-
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 
@@ -88,7 +86,6 @@ class ClienteServiceTest {
         Long id = 2L;
 
         when(repository.findById(id)).thenReturn(Optional.empty());
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, clienteDTO));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }

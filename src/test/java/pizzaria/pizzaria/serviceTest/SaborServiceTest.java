@@ -64,10 +64,10 @@ class SaborServiceTest {
     @Test
     void getId() {
         Long id = 1L;
-        SaborDTO sabor1 = new SaborDTO("Peperoni");
-        sabor1.setId(1L);
+        SaborDTO saborNew = new SaborDTO("Peperoni");
+        saborNew.setId(1L);
 
-        when(serviceTest.getId(anyLong())).thenReturn(sabor1);
+        when(serviceTest.getId(anyLong())).thenReturn(saborNew);
         SaborDTO result = serviceTest.getId(id);
         assertNotNull(result);
         assertEquals(sabor.getNome(), result.getNome());
@@ -76,9 +76,8 @@ class SaborServiceTest {
     @Test
     void testCreateException() {
         saborDTO.setId(1L);
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(saborDTO));
-        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, exception.getStatusCode());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 
     @Test
@@ -86,7 +85,6 @@ class SaborServiceTest {
         Long id = 2L;
 
         when(repository.findById(id)).thenReturn(Optional.empty());
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, saborDTO));
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }

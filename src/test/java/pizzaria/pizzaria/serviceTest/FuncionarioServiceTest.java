@@ -63,11 +63,11 @@ class FuncionarioServiceTest {
     @Test
     void getId() {
         Long id = 1L;
-        FuncionarioDTO funcionario1 = new FuncionarioDTO();
-        funcionario1.setId(1L);
-        funcionario1.setNome("Kaue");
+        FuncionarioDTO funcionarioNew = new FuncionarioDTO();
+        funcionarioNew.setId(1L);
+        funcionarioNew.setNome("Kaue");
 
-        when(serviceTest.getId(anyLong())).thenReturn(funcionario1);
+        when(serviceTest.getId(anyLong())).thenReturn(funcionarioNew);
         FuncionarioDTO result = serviceTest.getId(id);
         assertNotNull(result);
         Assertions.assertEquals(funcionario.getNome(), result.getNome());
@@ -76,9 +76,7 @@ class FuncionarioServiceTest {
     @Test
     void testCreateException() {
         funcionarioDTO.setId(1L);
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(funcionarioDTO));
-
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 
@@ -87,7 +85,6 @@ class FuncionarioServiceTest {
         Long id = 2L;
 
         when(repository.findById(id)).thenReturn(Optional.empty());
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, funcionarioDTO));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }

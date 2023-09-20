@@ -42,7 +42,7 @@ class EnderecoServiceTest {
     private EnderecoDTO enderecoDTO;
 
     @BeforeEach
-    private void setup(){
+    public void setup() {
         modelMapper = new ModelMapper();
         endereco = new EnderecoEntity();
         endereco.setRua("Marcolina");
@@ -79,9 +79,7 @@ class EnderecoServiceTest {
     @Test
     void testCreateException() {
         enderecoDTO.setId(1L);
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(enderecoDTO));
-
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 
@@ -90,7 +88,6 @@ class EnderecoServiceTest {
         Long id = 2L;
 
         when(repository.findById(id)).thenReturn(Optional.empty());
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, enderecoDTO));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }

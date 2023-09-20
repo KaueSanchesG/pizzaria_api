@@ -41,7 +41,7 @@ class ProdutoServiceTest {
     private ProdutoDTO produtoDTO;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         modelMapper = new ModelMapper();
         produto = new ProdutoEntity();
         produto.setNome("Pizza");
@@ -78,9 +78,7 @@ class ProdutoServiceTest {
     @Test
     void testCreateException() {
         produtoDTO.setId(1L);
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(produtoDTO));
-
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 
@@ -89,7 +87,6 @@ class ProdutoServiceTest {
         Long id = 2L;
 
         when(repository.findById(id)).thenReturn(Optional.empty());
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, produtoDTO));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }

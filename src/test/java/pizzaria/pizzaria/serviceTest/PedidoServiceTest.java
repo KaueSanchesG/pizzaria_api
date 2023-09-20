@@ -64,6 +64,7 @@ class PedidoServiceTest {
         List<PedidoDTO> resultList = service.getAll();
         Assertions.assertEquals(1, resultList.size());
     }
+
     @Test
     void getId() {
         Long id = 1L;
@@ -79,9 +80,7 @@ class PedidoServiceTest {
     @Test
     void testCreateException() {
         pedidoDTO.setId(1L);
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(pedidoDTO));
-
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 
@@ -90,7 +89,6 @@ class PedidoServiceTest {
         Long id = 2L;
 
         when(repository.findById(id)).thenReturn(Optional.empty());
-
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, pedidoDTO));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
