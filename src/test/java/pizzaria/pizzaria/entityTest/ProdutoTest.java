@@ -4,14 +4,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import pizzaria.pizzaria.entity.PedidoEntity;
 import pizzaria.pizzaria.entity.ProdutoEntity;
 import pizzaria.pizzaria.entity.SaborEntity;
 
 import java.util.List;
 
 @SpringBootTest
-class SaborTest {
-    SaborEntity sabor = new SaborEntity();
+class ProdutoTest {
+    ProdutoEntity produto = new ProdutoEntity();
 
     @BeforeEach
     public void setup() {
@@ -20,13 +21,13 @@ class SaborTest {
 
     @Test
     void setterTest() {
-        Assertions.assertEquals(1, sabor.getProdutos().size());
+        Assertions.assertEquals(2, produto.getPedidos().size() + produto.getPizzaSabor().size());
     }
 
-    public void initClass() {
-        ProdutoEntity produto = new ProdutoEntity();
-        sabor = new SaborEntity();
-        sabor.setNome("Peperoni");
-        sabor.setProdutos(List.of(produto));
+    private void initClass() {
+        produto.setNome("Pizza");
+        produto.setValor(12.0);
+        produto.setPedidos(List.of(new PedidoEntity()));
+        produto.setPizzaSabor(List.of(new SaborEntity()));
     }
 }
