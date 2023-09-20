@@ -33,20 +33,12 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<ClienteDTO> create(@RequestBody @Validated ClienteDTO dto) {
-        try {
             return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ClienteDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated ClienteDTO dto) {
-        try {
-            return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

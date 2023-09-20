@@ -33,20 +33,13 @@ public class FuncionarioController {
 
     @PostMapping
     public ResponseEntity<FuncionarioDTO> create(@RequestBody @Validated FuncionarioDTO dto) {
-        try {
-            return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<FuncionarioDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated FuncionarioDTO dto) {
-        try {
-            return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{id}")

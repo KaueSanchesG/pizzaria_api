@@ -33,20 +33,12 @@ public class EnderecoController {
 
     @PostMapping
     public ResponseEntity<EnderecoDTO> create(@RequestBody @Validated EnderecoDTO dto) {
-        try {
-            return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<EnderecoDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated EnderecoDTO dto) {
-        try {
-            return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

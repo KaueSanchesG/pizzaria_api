@@ -33,20 +33,13 @@ public class ProdutoController {
 
     @PostMapping
     public ResponseEntity<ProdutoDTO> create(@RequestBody @Validated ProdutoDTO dto) {
-        try {
-            return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
+
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated ProdutoDTO dto) {
-        try {
-            return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

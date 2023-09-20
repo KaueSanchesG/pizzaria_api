@@ -33,20 +33,13 @@ public class SaborController {
 
     @PostMapping
     public ResponseEntity<SaborDTO> create(@RequestBody @Validated SaborDTO dto) {
-        try {
-            return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
+
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<SaborDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated SaborDTO dto) {
-        try {
-            return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+        return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
