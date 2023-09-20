@@ -15,12 +15,12 @@ import pizzaria.pizzaria.entity.SaborEntity;
 import pizzaria.pizzaria.repository.SaborRepository;
 import pizzaria.pizzaria.service.SaborService;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -42,7 +42,7 @@ class SaborTest {
     private SaborDTO saborDTO;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         modelMapper = new ModelMapper();
         sabor = new SaborEntity();
         sabor.setNome("Peperoni");
@@ -51,18 +51,18 @@ class SaborTest {
     }
 
     @Test
-    void testList(){
+    void testList() {
         List<SaborEntity> listEntity = new ArrayList<>();
         listEntity.add(sabor);
 
         when(repository.findAll()).thenReturn(listEntity);
 
         List<SaborDTO> resultList = service.getAll();
-        Assertions.assertEquals(1, resultList.size());
+        assertEquals(1, resultList.size());
     }
 
     @Test
-    void getId(){
+    void getId() {
         Long id = 1L;
         SaborDTO sabor1 = new SaborDTO("Peperoni");
         sabor1.setId(1L);
@@ -70,24 +70,24 @@ class SaborTest {
         when(serviceTest.getId(anyLong())).thenReturn(sabor1);
         SaborDTO result = serviceTest.getId(id);
         assertNotNull(result);
-        Assertions.assertEquals(sabor.getNome(), result.getNome());
+        assertEquals(sabor.getNome(), result.getNome());
     }
 
     @Test
-    void testCreateException(){
+    void testCreateException() {
         saborDTO.setId(1L);
 
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.create(saborDTO));
-        Assertions.assertEquals(HttpStatus.METHOD_NOT_ALLOWED, exception.getStatusCode());
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, exception.getStatusCode());
     }
 
     @Test
-    void testUpdateException(){
+    void testUpdateException() {
         Long id = 2L;
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> service.update(id, saborDTO));
-        Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 }

@@ -90,7 +90,7 @@ class FuncionarioTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         when(service.create(any(FuncionarioDTO.class)))
-                .thenThrow(new RuntimeException("Algo deu errado"));
+                .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Algo deu errado"));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/funcionario")
                         .contentType(MediaType.APPLICATION_JSON)
