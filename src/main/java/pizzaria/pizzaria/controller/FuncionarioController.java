@@ -39,7 +39,6 @@ public class FuncionarioController {
     @PutMapping("/{id}")
     public ResponseEntity<FuncionarioDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated FuncionarioDTO dto) {
         return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
-
     }
 
     @DeleteMapping("/{id}")

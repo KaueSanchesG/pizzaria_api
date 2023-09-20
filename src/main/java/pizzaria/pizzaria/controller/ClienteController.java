@@ -33,7 +33,7 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<ClienteDTO> create(@RequestBody @Validated ClienteDTO dto) {
-            return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
+        return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

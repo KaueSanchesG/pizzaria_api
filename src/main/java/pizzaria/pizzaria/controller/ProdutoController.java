@@ -34,7 +34,6 @@ public class ProdutoController {
     @PostMapping
     public ResponseEntity<ProdutoDTO> create(@RequestBody @Validated ProdutoDTO dto) {
         return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
-
     }
 
     @PutMapping("/{id}")

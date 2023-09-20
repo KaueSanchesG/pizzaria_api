@@ -34,7 +34,6 @@ public class SaborController {
     @PostMapping
     public ResponseEntity<SaborDTO> create(@RequestBody @Validated SaborDTO dto) {
         return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
-
     }
 
     @PutMapping("/{id}")

@@ -34,13 +34,11 @@ public class PedidoController {
     @PostMapping
     public ResponseEntity<PedidoDTO> create(@RequestBody @Validated PedidoDTO dto) {
         return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
-
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PedidoDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated PedidoDTO dto) {
         return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
-
     }
 
     @DeleteMapping("/{id}")
