@@ -22,7 +22,7 @@ public class EnderecoService {
     private ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    public List<EnderecoDTO> getAll(){
+    public List<EnderecoDTO> getAll() {
         List<EnderecoDTO> listDTO = new ArrayList<>();
         for (EnderecoEntity entity : repository.findAll()) {
             EnderecoDTO map = modelMapper.map(entity, EnderecoDTO.class);
@@ -32,8 +32,8 @@ public class EnderecoService {
     }
 
     @Transactional(readOnly = true)
-    public EnderecoDTO getId(Long id){
-        EnderecoEntity entity = repository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+    public EnderecoDTO getId(Long id) {
+        EnderecoEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
         return modelMapper.map(entity, EnderecoDTO.class);
     }
 
@@ -47,7 +47,7 @@ public class EnderecoService {
 
     @Transactional
     public EnderecoDTO update(Long id, EnderecoDTO enderecoDTO) {
-        EnderecoEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço de id não encontrado!!!"));
+        EnderecoEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
         if (!dataBase.getId().equals(enderecoDTO.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O endereço não consta no banco!!");
         }

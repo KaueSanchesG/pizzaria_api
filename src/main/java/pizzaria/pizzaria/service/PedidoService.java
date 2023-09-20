@@ -61,7 +61,7 @@ public class PedidoService {
 
     @Transactional
     public PedidoDTO update(Long id, PedidoDTO dto) {
-        PedidoEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço de id não encontrado!!!"));
+        PedidoEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
         dto.setCadastro(dataBase.getCadastro());
         dto.setDataHora(dataBase.getDataHora());
         if (dto.getProdutos().size() != dataBase.getProdutos().size()) {

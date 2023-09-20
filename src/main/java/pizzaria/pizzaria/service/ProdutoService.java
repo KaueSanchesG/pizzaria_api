@@ -21,7 +21,7 @@ public class ProdutoService {
     private ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    public List<ProdutoDTO> getAll(){
+    public List<ProdutoDTO> getAll() {
         List<ProdutoDTO> listDTO = new ArrayList<>();
         for (ProdutoEntity entity : repository.findAll()) {
             ProdutoDTO map = modelMapper.map(entity, ProdutoDTO.class);
@@ -31,8 +31,8 @@ public class ProdutoService {
     }
 
     @Transactional(readOnly = true)
-    public ProdutoDTO getId(Long id){
-        ProdutoEntity entity = repository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+    public ProdutoDTO getId(Long id) {
+        ProdutoEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
         return modelMapper.map(entity, ProdutoDTO.class);
     }
 

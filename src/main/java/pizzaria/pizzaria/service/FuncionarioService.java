@@ -46,7 +46,7 @@ public class FuncionarioService {
 
     @Transactional
     public FuncionarioDTO update(Long id, FuncionarioDTO dto) {
-        FuncionarioEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço de id não encontrado!!!"));
+        FuncionarioEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
         dto.setCadastro(dataBase.getCadastro());
         return modelMapper.map(repository.save(modelMapper.map(dto, FuncionarioEntity.class)), FuncionarioDTO.class);
     }
