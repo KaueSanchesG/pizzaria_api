@@ -1,16 +1,16 @@
 package pizzaria.pizzaria.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import pizzaria.pizzaria.dto.ClienteDTO;
 import pizzaria.pizzaria.entity.ClienteEntity;
-import pizzaria.pizzaria.repository.ClienteRepository;
 import pizzaria.pizzaria.service.ClienteService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,36 +19,36 @@ public class ClienteController {
     @Autowired
     private ClienteService service;
     @Autowired
-    private ClienteRepository repository;
+    private ModelMapper modelMapper;
 
     @GetMapping("/list")
     public ResponseEntity<List<ClienteDTO>> list() {
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+        List<ClienteDTO> array = new ArrayList<>();
+        for (ClienteEntity entity : service.getAll()) {
+            ClienteDTO map = modelMapper.map(entity, ClienteDTO.class);
+            array.add(map);
+        }
+        return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<ClienteDTO> getIdByRequest(@RequestParam("id") final Long id) {
-        return new ResponseEntity<>(service.getId(id), HttpStatus.OK);
+        return new ResponseEntity<>(modelMapper.map(service.getId(id), ClienteDTO.class), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<ClienteDTO> create(@RequestBody @Validated ClienteDTO dto) {
-        return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
+        return new ResponseEntity<>(modelMapper.map(service.create(modelMapper.map(dto, ClienteEntity.class)), ClienteDTO.class), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ClienteDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated ClienteDTO dto) {
-        return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
+        return new ResponseEntity<>(modelMapper.map(service.update(id, modelMapper.map(dto, ClienteEntity.class)), ClienteDTO.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") final Long id) {
-        try {
-            ClienteEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-            repository.delete(entity);
-            return ResponseEntity.ok(HttpStatus.OK);
-        } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, e.getMessage());
-        }
+        service.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
