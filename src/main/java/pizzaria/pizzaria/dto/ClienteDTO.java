@@ -1,5 +1,6 @@
 package pizzaria.pizzaria.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,8 @@ public class ClienteDTO extends AbstractDTO{
     private String nome;
     @CPF(message = "o CPF deve seguir a norma padrão")
     private String cpf;
+    @JsonIgnoreProperties("cliente")
     private List<EnderecoDTO> enderecos;
+    @JsonIgnoreProperties("cliente")
     private List<PedidoDTO> pedidoList;
 }

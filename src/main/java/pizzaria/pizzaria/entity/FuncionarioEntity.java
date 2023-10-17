@@ -14,6 +14,6 @@ public class FuncionarioEntity extends AbstractEntity {
     @Column(nullable = false)
     private String nome;
 
-    @OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PedidoEntity> pedidos;
+    @OneToMany(mappedBy = "funcionario")
+    private List<PedidoEntity> pedidoList;
 }

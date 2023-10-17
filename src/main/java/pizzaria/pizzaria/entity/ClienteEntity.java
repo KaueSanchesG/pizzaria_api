@@ -17,10 +17,10 @@ public class ClienteEntity extends AbstractEntity {
     @Column(nullable = false, length = 15)
     private String cpf;
 
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cliente")
     private List<EnderecoEntity> enderecos;
 
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<PedidoEntity> pedidos;
+    @OneToMany(mappedBy = "cliente")
+    private List<PedidoEntity> pedidoList;
 }
 
