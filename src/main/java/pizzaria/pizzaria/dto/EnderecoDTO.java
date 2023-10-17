@@ -1,6 +1,5 @@
 package pizzaria.pizzaria.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -21,7 +20,6 @@ public class EnderecoDTO extends AbstractDTO{
     @NotNull(message = "O campo n pode ser nullo")
     @Positive(message = "O numero deve ser positivo")
     private int numero;
-    @JsonBackReference
-//    @NotNull(message = "O campo n pode ser nullo")
+    @NotNull(message = "O campo n pode ser nullo")
     private ClienteDTO cliente;
 }

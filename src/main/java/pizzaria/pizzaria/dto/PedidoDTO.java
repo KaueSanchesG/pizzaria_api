@@ -6,6 +6,7 @@
     import lombok.Getter;
     import lombok.NoArgsConstructor;
     import lombok.Setter;
+    import org.hibernate.annotations.CreationTimestamp;
 
     import java.time.LocalDateTime;
     import java.util.List;
@@ -21,6 +22,7 @@
         private List<ProdutoDTO> produtos;
         private Boolean entrega;
         private Double valorTotal;
+        @CreationTimestamp
         private LocalDateTime dataHora;
         @NotNull(message = "Deve conter um funcionario")
         private FuncionarioDTO funcionario;
