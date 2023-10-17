@@ -6,12 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import pizzaria.pizzaria.dto.FuncionarioDTO;
 import pizzaria.pizzaria.entity.FuncionarioEntity;
 import pizzaria.pizzaria.repository.FuncionarioRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FuncionarioService {
@@ -21,33 +20,38 @@ public class FuncionarioService {
     private ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    public List<FuncionarioDTO> getAll() {
-        List<FuncionarioDTO> listDTO = new ArrayList<>();
-        for (FuncionarioEntity entity : repository.findAll()) {
-            FuncionarioDTO map = modelMapper.map(entity, FuncionarioDTO.class);
-            listDTO.add(map);
-        }
-        return listDTO;
+    public List<FuncionarioEntity> getAll() {
+        return this.repository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public FuncionarioDTO getId(Long id) {
-        FuncionarioEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não foi possivel encontrar o registro"));
-        return modelMapper.map(entity, FuncionarioDTO.class);
+    public FuncionarioEntity getId(Long id) {
+        Optional<FuncionarioEntity> optional = this.repository.findById(id);
+        if (optional.isPresent()) {
+            return optional.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Transactional
-    public FuncionarioDTO create(FuncionarioDTO dto) {
-        if (dto.getId() != null) {
+    public FuncionarioEntity create(FuncionarioEntity entity) {
+        if (entity.getId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deixe o campo Id vago, ele é gerado pelo banco");
         }
-        return modelMapper.map(repository.save(modelMapper.map(dto, FuncionarioEntity.class)), FuncionarioDTO.class);
+        return this.repository.save(entity);
     }
 
     @Transactional
-    public FuncionarioDTO update(Long id, FuncionarioDTO dto) {
-        FuncionarioEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-        dto.setCadastro(dataBase.getCadastro());
-        return modelMapper.map(repository.save(modelMapper.map(dto, FuncionarioEntity.class)), FuncionarioDTO.class);
+    public FuncionarioEntity update(Long id, FuncionarioEntity entity) {
+        FuncionarioEntity dataBase = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+        entity.setCadastro(dataBase.getCadastro());
+        modelMapper.map(entity, dataBase);
+        return this.repository.save(dataBase);
+    }
+
+    @Transactional(readOnly = true)
+    public void delete(Long id){
+        this.repository.deleteById(id);
     }
 }

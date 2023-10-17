@@ -6,12 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import pizzaria.pizzaria.dto.SaborDTO;
 import pizzaria.pizzaria.entity.SaborEntity;
 import pizzaria.pizzaria.repository.SaborRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SaborService {
@@ -21,33 +20,38 @@ public class SaborService {
     private ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    public List<SaborDTO> getAll() {
-        List<SaborDTO> listDTO = new ArrayList<>();
-        for (SaborEntity entity : repository.findAll()) {
-            SaborDTO map = modelMapper.map(entity, SaborDTO.class);
-            listDTO.add(map);
-        }
-        return listDTO;
+    public List<SaborEntity> getAll() {
+        return this.repository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public SaborDTO getId(Long id) {
-        SaborEntity entity = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-        return modelMapper.map(entity, SaborDTO.class);
+    public SaborEntity getId(Long id) {
+        Optional<SaborEntity> optional = this.repository.findById(id);
+        if (optional.isPresent()) {
+            return optional.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Transactional
-    public SaborDTO create(SaborDTO saborDTO) {
-        if (saborDTO.getId() != null) {
+    public SaborEntity create(SaborEntity entity) {
+        if (entity.getId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deixe o campo Id vago, ele é gerado pelo banco");
         }
-        return modelMapper.map(repository.save(modelMapper.map(saborDTO, SaborEntity.class)), SaborDTO.class);
+        return this.repository.save(entity);
     }
 
     @Transactional
-    public SaborDTO update(Long id, SaborDTO dto) {
-        SaborEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-        dto.setCadastro(dataBase.getCadastro());
-        return modelMapper.map(repository.save(modelMapper.map(dto, SaborEntity.class)), SaborDTO.class);
+    public SaborEntity update(Long id, SaborEntity entity) {
+        SaborEntity dataBase = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+        entity.setCadastro(dataBase.getCadastro());
+        modelMapper.map(entity, dataBase);
+        return this.repository.save(dataBase);
+    }
+
+    @Transactional(readOnly = true)
+    public void delete(Long id){
+        this.repository.deleteById(id);
     }
 }

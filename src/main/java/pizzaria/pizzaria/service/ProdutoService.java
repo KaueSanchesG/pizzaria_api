@@ -6,12 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import pizzaria.pizzaria.dto.ProdutoDTO;
 import pizzaria.pizzaria.entity.ProdutoEntity;
 import pizzaria.pizzaria.repository.ProdutoRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProdutoService {
@@ -21,33 +20,38 @@ public class ProdutoService {
     private ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    public List<ProdutoDTO> getAll() {
-        List<ProdutoDTO> listDTO = new ArrayList<>();
-        for (ProdutoEntity entity : repository.findAll()) {
-            ProdutoDTO map = modelMapper.map(entity, ProdutoDTO.class);
-            listDTO.add(map);
-        }
-        return listDTO;
+    public List<ProdutoEntity> getAll() {
+        return this.repository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public ProdutoDTO getId(Long id) {
-        ProdutoEntity entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-        return modelMapper.map(entity, ProdutoDTO.class);
+    public ProdutoEntity getId(Long id) {
+        Optional<ProdutoEntity> optional = this.repository.findById(id);
+        if (optional.isPresent()) {
+            return optional.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Transactional
-    public ProdutoDTO create(ProdutoDTO dto) {
-        if (dto.getId() != null) {
+    public ProdutoEntity create(ProdutoEntity entity) {
+        if (entity.getId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deixe o campo Id vago, ele é gerado pelo banco");
         }
-        return modelMapper.map(repository.save(modelMapper.map(dto, ProdutoEntity.class)), ProdutoDTO.class);
+        return this.repository.save(entity);
     }
 
     @Transactional
-    public ProdutoDTO update(Long id, ProdutoDTO dto) {
-        ProdutoEntity dataBase = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-        dto.setCadastro(dataBase.getCadastro());
-        return modelMapper.map(repository.save(modelMapper.map(dto, ProdutoEntity.class)), ProdutoDTO.class);
+    public ProdutoEntity update(Long id, ProdutoEntity entity) {
+        ProdutoEntity dataBase = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
+        entity.setCadastro(dataBase.getCadastro());
+        modelMapper.map(entity, dataBase);
+        return this.repository.save(dataBase);
+    }
+
+    @Transactional(readOnly = true)
+    public void delete(Long id){
+        this.repository.deleteById(id);
     }
 }
