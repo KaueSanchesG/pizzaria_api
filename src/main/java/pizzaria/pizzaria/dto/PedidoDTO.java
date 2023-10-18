@@ -1,5 +1,6 @@
     package pizzaria.pizzaria.dto;
 
+    import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
     import jakarta.validation.constraints.NotEmpty;
     import jakarta.validation.constraints.NotNull;
     import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@
     @NoArgsConstructor
     @AllArgsConstructor
     public class PedidoDTO extends AbstractDTO{
+        @JsonIgnoreProperties("pedidoList")
         @NotNull(message = "Deve conter um cliente")
         private ClienteDTO cliente;
         @NotEmpty(message = "Deve conter pelo menos um produto")
@@ -24,6 +26,7 @@
         private Double valorTotal;
         @CreationTimestamp
         private LocalDateTime dataHora;
+        @JsonIgnoreProperties("pedidoList")
         @NotNull(message = "Deve conter um funcionario")
         private FuncionarioDTO funcionario;
     }
