@@ -1,39 +1,44 @@
-package pizzaria.pizzaria.entity;
+    package pizzaria.pizzaria.entity;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+    import jakarta.persistence.*;
+    import lombok.Getter;
+    import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.List;
+    import java.time.LocalDateTime;
+    import java.util.List;
 
-@Entity
-@Getter
-@Setter
-@Table(name = "Pedido")
-public class PedidoEntity extends AbstractEntity {
-    @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = false)
-    private ClienteEntity cliente;
+    @Entity
+    @Getter
+    @Setter
+    @Table(name = "Pedido", schema = "pizzaria")
+    public class PedidoEntity extends AbstractEntity {
+        @ManyToOne
+        @JoinColumn(name = "cliente_id", nullable = false)
+        private ClienteEntity cliente;
 
-    @ManyToMany
-    @JoinTable(
-            name = "pedido_produto",
-            joinColumns = @JoinColumn(name = "pedido_id"),
-            inverseJoinColumns = @JoinColumn(name = "produto_id")
-    )
-    private List<ProdutoEntity> produtos;
+        @OneToMany
+        @JoinColumn(name = "produto_id")
+        private List<ProdutoEntity> produtoList;
 
-    @Column
-    private Boolean entrega;
+        @OneToMany
+        @JoinColumn(name = "pizza_id")
+        private List<PizzaEntity> pizzaList;
 
-    @Column
-    private Double valorTotal;
+        @Column
+        private Boolean entrega;
 
-    @Column
-    private LocalDateTime dataHora;
+        @Column
+        private String formaDePagamento;
 
-    @ManyToOne
-    @JoinColumn(name = "funcionario_id", nullable = false)
-    private FuncionarioEntity funcionario;
-}
+        @Column
+        private Double valorTotal;
+
+        @Column
+        private LocalDateTime dataHora;
+
+        @ManyToOne
+        @JoinColumn(name = "funcionario_id", nullable = false)
+        private FuncionarioEntity funcionario;
+
+
+    }

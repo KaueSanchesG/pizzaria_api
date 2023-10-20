@@ -12,11 +12,11 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "Sabor")
+@Table(name = "Sabor", schema = "pizzaria")
 public class SaborEntity extends AbstractEntity {
     @Column(nullable = false, unique = true)
     private String nome;
 
-    @ManyToMany(mappedBy = "pizzaSabor")
-    private List<ProdutoEntity> produtos;
+    @ManyToMany(mappedBy = "saborList")
+    private List<PizzaEntity> pizzaList;
 }
