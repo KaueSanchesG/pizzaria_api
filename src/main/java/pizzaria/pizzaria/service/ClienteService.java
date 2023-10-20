@@ -1,11 +1,11 @@
 package pizzaria.pizzaria.service;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import pizzaria.pizzaria.config.RegistroNaoEncontradoException;
 import pizzaria.pizzaria.entity.ClienteEntity;
 import pizzaria.pizzaria.repository.ClienteRepository;
 
@@ -16,8 +16,6 @@ import java.util.Optional;
 public class ClienteService {
     @Autowired
     private ClienteRepository repository;
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
     public List<ClienteEntity> getAll() {
@@ -30,28 +28,65 @@ public class ClienteService {
         if (optional.isPresent()) {
             return optional.get();
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new RegistroNaoEncontradoException();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public ClienteEntity getClienteByCpf(String cpf){
+        ClienteEntity database = this.repository.findByCpf(cpf);
+        if (database==null){
+            throw new RegistroNaoEncontradoException();
+        }
+        return database;
+    }
+
+    @Transactional(readOnly = true)
+    public ClienteEntity getClienteByNome(String nome){
+        ClienteEntity database = this.repository.findByNome(nome);
+        if (database==null){
+            throw new RegistroNaoEncontradoException();
+        }
+        return database;
     }
 
     @Transactional
     public ClienteEntity create(ClienteEntity entity) {
-        if (entity.getId() != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deixe o campo Id vago, ele é gerado pelo banco");
+        if (this.repository.findByCpf(entity.getCpf())!=null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O cpf ja existe");
         }
         return this.repository.save(entity);
     }
 
     @Transactional
     public ClienteEntity update(Long id, ClienteEntity entity) {
-        ClienteEntity database = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-        entity.setCadastro(database.getCadastro());
-        modelMapper.map(entity, database);
+        ClienteEntity database = this.repository.findById(id).orElseThrow(RegistroNaoEncontradoException::new);
+        if (this.repository.findByCpf(entity.getCpf())!=null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O cpf ja existe");
+        }
+        copyPropertiesToBlankSpaces(entity, database);
         return repository.save(database);
     }
 
     @Transactional(readOnly = true)
-    public void delete(Long id){
+    public void delete(Long id) {
         this.repository.deleteById(id);
+    }
+
+    private void copyPropertiesToBlankSpaces(ClienteEntity entity, ClienteEntity database) {
+        entity.setCadastro(database.getCadastro());
+        entity.setId(database.getId());
+        if (entity.getNome() == null) {
+            entity.setNome(database.getNome());
+        }
+        if (entity.getCpf() == null) {
+            entity.setCpf(database.getCpf());
+        }
+        if (entity.getEnderecoList() == null) {
+            entity.setEnderecoList(database.getEnderecoList());
+        }
+        if (entity.getPedidoList() == null) {
+            entity.setPedidoList(database.getPedidoList());
+        }
     }
 }

@@ -1,11 +1,9 @@
 package pizzaria.pizzaria.service;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
+import pizzaria.pizzaria.config.RegistroNaoEncontradoException;
 import pizzaria.pizzaria.entity.ProdutoEntity;
 import pizzaria.pizzaria.repository.ProdutoRepository;
 
@@ -16,8 +14,6 @@ import java.util.Optional;
 public class ProdutoService {
     @Autowired
     private ProdutoRepository repository;
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
     public List<ProdutoEntity> getAll() {
@@ -30,28 +26,47 @@ public class ProdutoService {
         if (optional.isPresent()) {
             return optional.get();
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new RegistroNaoEncontradoException();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public ProdutoEntity getProdutoByNome(String nome){
+        ProdutoEntity produto = this.repository.findByNome(nome);
+        if (produto==null){
+            throw new RegistroNaoEncontradoException();
+        }
+        return produto;
     }
 
     @Transactional
     public ProdutoEntity create(ProdutoEntity entity) {
-        if (entity.getId() != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Deixe o campo Id vago, ele é gerado pelo banco");
-        }
         return this.repository.save(entity);
     }
 
     @Transactional
     public ProdutoEntity update(Long id, ProdutoEntity entity) {
-        ProdutoEntity dataBase = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
-        entity.setCadastro(dataBase.getCadastro());
-        modelMapper.map(entity, dataBase);
+        ProdutoEntity dataBase = this.repository.findById(id).orElseThrow(RegistroNaoEncontradoException::new);
+        copyPropertiesToBlankSpaces(entity, dataBase);
         return this.repository.save(dataBase);
     }
 
     @Transactional(readOnly = true)
-    public void delete(Long id){
+    public void delete(Long id) {
         this.repository.deleteById(id);
+    }
+
+    private void copyPropertiesToBlankSpaces(ProdutoEntity entity, ProdutoEntity dataBase) {
+        entity.setCadastro(dataBase.getCadastro());
+        entity.setId(dataBase.getId());
+        if (entity.getNome() == null) {
+            entity.setNome(dataBase.getNome());
+        }
+        if (entity.getValor() == null) {
+            entity.setValor(dataBase.getValor());
+        }
+        if (entity.getPedido() == null) {
+            entity.setPedido(dataBase.getPedido());
+        }
     }
 }
