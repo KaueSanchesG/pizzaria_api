@@ -1,15 +1,16 @@
 package pizzaria.pizzaria.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "Produto")
+@Table(name = "Produto", schema = "pizzaria")
 public class ProdutoEntity extends AbstractEntity {
     @Column(nullable = false, unique = true)
     private String nome;
@@ -17,15 +18,6 @@ public class ProdutoEntity extends AbstractEntity {
     @Column(nullable = false)
     private Double valor;
 
-    @ManyToMany(mappedBy = "produtos")
-    private List<PedidoEntity> pedidos;
-
-    @ManyToMany
-    @JoinTable(
-            name = "produto_pizzasabor",
-            joinColumns = @JoinColumn(name = "produto_id"),
-            inverseJoinColumns = @JoinColumn(name = "pizzasabor_id")
-    )
-    private List<SaborEntity> pizzaSabor;
-
+    @ManyToOne
+    private PedidoEntity pedido;
 }

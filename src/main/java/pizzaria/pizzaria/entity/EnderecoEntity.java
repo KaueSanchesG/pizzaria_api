@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "Endereco")
+@Table(name = "Endereco", schema = "pizzaria")
 public class EnderecoEntity extends AbstractEntity {
     @Column(nullable = false, length = 50)
     private String rua;
