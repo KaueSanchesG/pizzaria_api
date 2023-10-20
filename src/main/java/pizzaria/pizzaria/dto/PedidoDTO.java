@@ -1,7 +1,7 @@
     package pizzaria.pizzaria.dto;
 
     import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-    import jakarta.validation.constraints.NotEmpty;
+    import jakarta.validation.constraints.NotBlank;
     import jakarta.validation.constraints.NotNull;
     import lombok.AllArgsConstructor;
     import lombok.Getter;
@@ -20,9 +20,13 @@
         @JsonIgnoreProperties("pedidoList")
         @NotNull(message = "Deve conter um cliente")
         private ClienteDTO cliente;
-        @NotEmpty(message = "Deve conter pelo menos um produto")
-        private List<ProdutoDTO> produtos;
+        @JsonIgnoreProperties("pedidoList")
+        private List<ProdutoDTO> produtoList;
+        @JsonIgnoreProperties("pedidoList")
+        private List<PizzaDTO> pizzaList;
         private Boolean entrega;
+        @NotBlank(message = "Informe a forma de pagamento")
+        private String formaDePagamento;
         private Double valorTotal;
         @CreationTimestamp
         private LocalDateTime dataHora;
