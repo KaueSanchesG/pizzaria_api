@@ -31,6 +31,11 @@ public class FuncionarioController {
         return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<FuncionarioDTO> getFuncionarioByNome(@PathVariable("nome") String nome){
+        return new ResponseEntity<>(modelMapper.map(service.getFuncionarioByNome(nome), FuncionarioDTO.class), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<FuncionarioDTO> getIdByRequest(@RequestParam("id") final Long id) {
         return new ResponseEntity<>(modelMapper.map(service.getId(id), FuncionarioDTO.class), HttpStatus.OK);
@@ -42,7 +47,8 @@ public class FuncionarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FuncionarioDTO> updateByPath(@PathVariable("id") final Long id, @RequestBody final @Validated FuncionarioDTO dto) {
+    public ResponseEntity<FuncionarioDTO> updateByPath(@PathVariable("id") final Long id,
+                                                       @RequestBody final @Validated FuncionarioDTO dto) {
         return new ResponseEntity<>(modelMapper.map(service.update(id, modelMapper.map(dto, FuncionarioEntity.class)), FuncionarioDTO.class), HttpStatus.OK);
     }
 

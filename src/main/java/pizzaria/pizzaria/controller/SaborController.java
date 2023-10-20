@@ -31,6 +31,11 @@ public class SaborController {
         return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<SaborDTO> getSaborByNome(@PathVariable("nome") String nome){
+        return new ResponseEntity<>(modelMapper.map(service.getSaborByNome(nome), SaborDTO.class), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<SaborDTO> getIdByRequest(@RequestParam("id") final long id) {
         return new ResponseEntity<>(modelMapper.map(service.getId(id), SaborDTO.class), HttpStatus.OK);

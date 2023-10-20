@@ -31,6 +31,11 @@ public class ProdutoController {
         return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<ProdutoDTO> getProdutoByNome(@PathVariable("nome") String nome){
+        return new ResponseEntity<>(modelMapper.map(service.getProdutoByNome(nome), ProdutoDTO.class), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<ProdutoDTO> getIdByRequest(@RequestParam("id") final long id) {
         return new ResponseEntity<>(modelMapper.map(service.getId(id), ProdutoDTO.class), HttpStatus.OK);

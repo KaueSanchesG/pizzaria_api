@@ -30,6 +30,14 @@ public class ClienteController {
         }
         return new ResponseEntity<>(array, HttpStatus.OK);
     }
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<ClienteDTO> getClienteByNome(@PathVariable("nome") String nome){
+        return new ResponseEntity<>(modelMapper.map(service.getClienteByNome(nome), ClienteDTO.class), HttpStatus.OK);
+    }
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<ClienteDTO> getClienteByCpf(@PathVariable("cpf") String cpf){
+        return new ResponseEntity<>(modelMapper.map(service.getClienteByCpf(cpf), ClienteDTO.class), HttpStatus.OK);
+    }
 
     @GetMapping
     public ResponseEntity<ClienteDTO> getIdByRequest(@RequestParam("id") final Long id) {

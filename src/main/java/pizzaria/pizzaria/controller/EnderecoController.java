@@ -22,9 +22,19 @@ public class EnderecoController {
     private ModelMapper modelMapper;
 
     @GetMapping("/list")
-    public ResponseEntity<List<EnderecoDTO>> list() {
+    public ResponseEntity<List<EnderecoDTO> >list() {
         List<EnderecoDTO> array = new ArrayList<>();
         for (EnderecoEntity entity : service.getAll()) {
+            EnderecoDTO map = modelMapper.map(entity, EnderecoDTO.class);
+            array.add(map);
+        }
+        return new ResponseEntity<>(array, HttpStatus.OK);
+    }
+
+    @GetMapping("/cliente/{nome}")
+    public ResponseEntity<List<EnderecoDTO>> getEnderecoByClienteNome(@PathVariable("nome") String nome){
+        List<EnderecoDTO> array = new ArrayList<>();
+        for (EnderecoEntity entity: service.getEnderecoByClienteNome(nome)){
             EnderecoDTO map = modelMapper.map(entity, EnderecoDTO.class);
             array.add(map);
         }
