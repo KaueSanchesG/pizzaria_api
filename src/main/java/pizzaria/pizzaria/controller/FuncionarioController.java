@@ -32,8 +32,13 @@ public class FuncionarioController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<FuncionarioDTO> getFuncionarioByNome(@PathVariable("nome") String nome){
-        return new ResponseEntity<>(modelMapper.map(service.getFuncionarioByNome(nome), FuncionarioDTO.class), HttpStatus.OK);
+    public ResponseEntity<List<FuncionarioDTO>> getFuncionarioByNome(@PathVariable("nome") String nome){
+        List<FuncionarioDTO> array = new ArrayList<>();
+        for (FuncionarioEntity entity : service.getFuncionarioByNome(nome)) {
+            FuncionarioDTO map = modelMapper.map(entity, FuncionarioDTO.class);
+            array.add(map);
+        }
+        return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
     @GetMapping

@@ -32,8 +32,13 @@ public class SaborController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<SaborDTO> getSaborByNome(@PathVariable("nome") String nome){
-        return new ResponseEntity<>(modelMapper.map(service.getSaborByNome(nome), SaborDTO.class), HttpStatus.OK);
+    public ResponseEntity<List<SaborDTO>> getSaborByNome(@PathVariable("nome") String nome){
+        List<SaborDTO> array = new ArrayList<>();
+        for (SaborEntity entity : service.getSaborByNome(nome)) {
+            SaborDTO map = modelMapper.map(entity, SaborDTO.class);
+            array.add(map);
+        }
+        return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
     @GetMapping

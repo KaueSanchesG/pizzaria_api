@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pizzaria.pizzaria.dto.PizzaDTO;
 import pizzaria.pizzaria.entity.PizzaEntity;
+import pizzaria.pizzaria.entity.enums.Tamanho;
 import pizzaria.pizzaria.service.PizzaService;
 
 import java.util.ArrayList;
@@ -32,18 +33,33 @@ public class PizzaController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<PizzaDTO> getPizzaByNome(@PathVariable("nome") String nome){
-        return new ResponseEntity<>(modelMapper.map(service.getPizzaByNome(nome), PizzaDTO.class), HttpStatus.OK);
+    public ResponseEntity<List<PizzaDTO>> getPizzaByNome(@PathVariable("nome") String nome){
+        List<PizzaDTO> array = new ArrayList<>();
+        for (PizzaEntity entity : service.getPizzaByNome(nome)){
+            PizzaDTO map = modelMapper.map(entity, PizzaDTO.class);
+            array.add(map);
+        }
+        return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
     @GetMapping("/sabor/{sabor}")
-    public ResponseEntity<PizzaDTO> getPizzaBySabor(@PathVariable("sabor") String sabor){
-        return new ResponseEntity<>(modelMapper.map(service.getPizzaBySabor(sabor), PizzaDTO.class), HttpStatus.OK);
+    public ResponseEntity<List<PizzaDTO>> getPizzaBySabor(@PathVariable("sabor") String sabor){
+        List<PizzaDTO> array = new ArrayList<>();
+        for (PizzaEntity entity : service.getPizzaBySabor(sabor)){
+            PizzaDTO map = modelMapper.map(entity, PizzaDTO.class);
+            array.add(map);
+        }
+        return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
     @GetMapping("/tamanho/{tamanho}")
-    public ResponseEntity<PizzaDTO> getPizzaByTamanho(@PathVariable("tamanho") String tamanho){
-        return new ResponseEntity<>(modelMapper.map(service.getPizzaByTamanho(tamanho), PizzaDTO.class), HttpStatus.OK);
+    public ResponseEntity<List<PizzaDTO>> getPizzaByTamanho(@PathVariable("tamanho") Tamanho tamanho){
+        List<PizzaDTO> array = new ArrayList<>();
+        for (PizzaEntity entity : service.getPizzaByTamanho(tamanho)){
+            PizzaDTO map = modelMapper.map(entity, PizzaDTO.class);
+            array.add(map);
+        }
+        return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
     @GetMapping

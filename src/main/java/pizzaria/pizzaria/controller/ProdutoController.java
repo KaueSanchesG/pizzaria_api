@@ -32,8 +32,13 @@ public class ProdutoController {
     }
 
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<ProdutoDTO> getProdutoByNome(@PathVariable("nome") String nome){
-        return new ResponseEntity<>(modelMapper.map(service.getProdutoByNome(nome), ProdutoDTO.class), HttpStatus.OK);
+    public ResponseEntity<List<ProdutoDTO>> getProdutoByNome(@PathVariable("nome") String nome){
+        List<ProdutoDTO> array = new ArrayList<>();
+        for (ProdutoEntity entity : service.getProdutoByNome(nome)){
+            ProdutoDTO map = modelMapper.map(entity, ProdutoDTO.class);
+            array.add(map);
+        }
+        return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
     @GetMapping

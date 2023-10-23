@@ -31,8 +31,13 @@ public class ClienteController {
         return new ResponseEntity<>(array, HttpStatus.OK);
     }
     @GetMapping("/nome/{nome}")
-    public ResponseEntity<ClienteDTO> getClienteByNome(@PathVariable("nome") String nome){
-        return new ResponseEntity<>(modelMapper.map(service.getClienteByNome(nome), ClienteDTO.class), HttpStatus.OK);
+    public ResponseEntity<List<ClienteDTO>> getClienteByNome(@PathVariable("nome") String nome){
+        List<ClienteDTO> array = new ArrayList<>();
+        for (ClienteEntity entity : service.getClienteByNome(nome)) {
+            ClienteDTO map = modelMapper.map(entity, ClienteDTO.class);
+            array.add(map);
+        }
+        return new ResponseEntity<>(array, HttpStatus.OK);
     }
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<ClienteDTO> getClienteByCpf(@PathVariable("cpf") String cpf){
