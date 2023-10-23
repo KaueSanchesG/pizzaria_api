@@ -31,12 +31,12 @@ public class FuncionarioService {
     }
 
     @Transactional(readOnly = true)
-    public FuncionarioEntity getFuncionarioByNome(String nome){
-        FuncionarioEntity funcionario = this.repository.findByNome(nome);
-        if (funcionario==null){
+    public List<FuncionarioEntity> getFuncionarioByNome(String nome){
+        List<FuncionarioEntity> funcionarios = this.repository.findByNome(nome);
+        if (funcionarios.isEmpty()){
             throw new RegistroNaoEncontradoException();
         }
-        return funcionario;
+        return funcionarios;
     }
 
     @Transactional

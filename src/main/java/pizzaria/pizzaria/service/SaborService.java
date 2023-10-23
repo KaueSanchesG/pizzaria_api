@@ -33,12 +33,12 @@ public class SaborService {
     }
 
     @Transactional(readOnly = true)
-    public SaborEntity getSaborByNome(String nome) {
-        SaborEntity sabor = this.repository.findByNome(nome);
-        if (sabor == null) {
+    public List<SaborEntity> getSaborByNome(String nome) {
+        List<SaborEntity> sabores = this.repository.findByNome(nome);
+        if (sabores.isEmpty()) {
             throw new RegistroNaoEncontradoException();
         }
-        return sabor;
+        return sabores;
     }
 
     @Transactional

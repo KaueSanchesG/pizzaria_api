@@ -31,12 +31,12 @@ public class ProdutoService {
     }
 
     @Transactional(readOnly = true)
-    public ProdutoEntity getProdutoByNome(String nome){
-        ProdutoEntity produto = this.repository.findByNome(nome);
-        if (produto==null){
+    public List<ProdutoEntity> getProdutoByNome(String nome){
+        List<ProdutoEntity> produtos = this.repository.findByNome(nome);
+        if (produtos.isEmpty()){
             throw new RegistroNaoEncontradoException();
         }
-        return produto;
+        return produtos;
     }
 
     @Transactional

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pizzaria.pizzaria.config.RegistroNaoEncontradoException;
 import pizzaria.pizzaria.entity.PizzaEntity;
+import pizzaria.pizzaria.entity.enums.Tamanho;
 import pizzaria.pizzaria.repository.PizzaRepository;
 
 import java.util.List;
@@ -30,12 +31,12 @@ public class PizzaService {
         }
     }
     @Transactional(readOnly = true)
-    public PizzaEntity getPizzaByNome(String nome){
-        PizzaEntity pizza = this.repository.findByNome(nome);
-        if (pizza==null){
+    public List<PizzaEntity> getPizzaByNome(String nome){
+        List<PizzaEntity> pizzas = this.repository.findByNome(nome);
+        if (pizzas.isEmpty()){
             throw new RegistroNaoEncontradoException();
         }
-        return pizza;
+        return pizzas;
     }
 
     @Transactional
@@ -48,7 +49,7 @@ public class PizzaService {
     }
 
     @Transactional
-    public List<PizzaEntity> getPizzaByTamanho(String tamanho){
+    public List<PizzaEntity> getPizzaByTamanho(Tamanho tamanho){
         List<PizzaEntity> pizzas = this.repository.findByTamanho(tamanho);
         if (pizzas.isEmpty()){
             throw new RegistroNaoEncontradoException();
