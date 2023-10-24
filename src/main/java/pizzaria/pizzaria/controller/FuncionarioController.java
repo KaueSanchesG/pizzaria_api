@@ -46,7 +46,7 @@ public class FuncionarioController {
         return new ResponseEntity<>(modelMapper.map(service.getId(id), FuncionarioDTO.class), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<FuncionarioDTO> create(@RequestBody @Validated FuncionarioDTO dto) {
         return new ResponseEntity<>(modelMapper.map(service.create(modelMapper.map(dto, FuncionarioEntity.class)), FuncionarioDTO.class), HttpStatus.CREATED);
     }

@@ -46,7 +46,7 @@ public class EnderecoController {
         return new ResponseEntity<>(modelMapper.map(service.getId(id), EnderecoDTO.class), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<EnderecoDTO> create(@RequestBody @Validated EnderecoDTO dto) {
         return new ResponseEntity<>(modelMapper.map(service.create(modelMapper.map(dto, EnderecoEntity.class)), EnderecoDTO.class), HttpStatus.CREATED);
     }

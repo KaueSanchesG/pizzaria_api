@@ -46,7 +46,7 @@ public class SaborController {
         return new ResponseEntity<>(modelMapper.map(service.getId(id), SaborDTO.class), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<SaborDTO> create(@RequestBody @Validated SaborDTO dto) {
         return new ResponseEntity<>(modelMapper.map(service.create(modelMapper.map(dto, SaborEntity.class)), SaborDTO.class), HttpStatus.CREATED);
     }

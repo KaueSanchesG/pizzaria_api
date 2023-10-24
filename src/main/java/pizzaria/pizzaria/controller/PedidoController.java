@@ -77,7 +77,7 @@ public class PedidoController {
         return new ResponseEntity<>(modelMapper.map(service.getId(id), PedidoDTO.class), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<PedidoDTO> create(@RequestBody @Validated PedidoDTO dto) {
         return new ResponseEntity<>(modelMapper.map(service.create(modelMapper.map(dto, PedidoEntity.class)), PedidoDTO.class), HttpStatus.CREATED);
     }

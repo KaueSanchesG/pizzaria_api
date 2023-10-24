@@ -46,7 +46,7 @@ public class ProdutoController {
         return new ResponseEntity<>(modelMapper.map(service.getId(id), ProdutoDTO.class), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<ProdutoDTO> create(@RequestBody @Validated ProdutoDTO dto) {
         return new ResponseEntity<>(modelMapper.map(service.create(modelMapper.map(dto, ProdutoEntity.class)), ProdutoDTO.class), HttpStatus.CREATED);
     }

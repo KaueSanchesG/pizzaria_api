@@ -49,7 +49,7 @@ public class ClienteController {
         return new ResponseEntity<>(modelMapper.map(service.getId(id), ClienteDTO.class), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<ClienteDTO> create(@RequestBody @Validated ClienteDTO dto) {
         return new ResponseEntity<>(modelMapper.map(service.create(modelMapper.map(dto, ClienteEntity.class)), ClienteDTO.class), HttpStatus.CREATED);
     }
