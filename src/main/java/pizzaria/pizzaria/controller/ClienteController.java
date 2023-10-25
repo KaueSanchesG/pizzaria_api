@@ -44,8 +44,8 @@ public class ClienteController {
         return new ResponseEntity<>(modelMapper.map(service.getClienteByCpf(cpf), ClienteDTO.class), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<ClienteDTO> getIdByRequest(@RequestParam("id") final Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ClienteDTO> getIdByRequest(@PathVariable("id") final Long id) {
         return new ResponseEntity<>(modelMapper.map(service.getId(id), ClienteDTO.class), HttpStatus.OK);
     }
 
