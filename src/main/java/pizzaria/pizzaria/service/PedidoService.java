@@ -56,8 +56,17 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
-    public List<PedidoEntity> getPedidoByEntrega(Boolean entrega) {
-        List<PedidoEntity> pedidos = this.repository.findByEntrega(entrega);
+    public List<PedidoEntity> getPedidoByEntrega() {
+        List<PedidoEntity> pedidos = this.repository.findByEntregaTrue();
+        if (pedidos.isEmpty()) {
+            throw new RegistroNaoEncontradoException();
+        }
+        return pedidos;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PedidoEntity> getPedidoAtivo() {
+        List<PedidoEntity> pedidos = this.repository.findByAtivoTrue();
         if (pedidos.isEmpty()) {
             throw new RegistroNaoEncontradoException();
         }
@@ -99,7 +108,9 @@ public class PedidoService {
 
     @Transactional(readOnly = true)
     public void delete(Long id) {
-        this.repository.deleteById(id);
+        PedidoEntity database = this.repository.findById(id).orElseThrow(RegistroNaoEncontradoException::new);
+        database.setAtivo(false);
+        this.repository.save(database);
     }
 
     private void copyPropertiesToBlankSpaces(PedidoEntity entity, PedidoEntity dataBase) {

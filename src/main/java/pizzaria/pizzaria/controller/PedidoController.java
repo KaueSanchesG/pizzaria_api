@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pizzaria.pizzaria.dto.PedidoDTO;
 import pizzaria.pizzaria.entity.PedidoEntity;
 import pizzaria.pizzaria.service.PedidoService;
@@ -52,10 +53,20 @@ public class PedidoController {
         return new ResponseEntity<>(array, HttpStatus.OK);
     }
 
-    @GetMapping("/entrega/{entrega}")
-    public ResponseEntity<List<PedidoDTO>> getPedidoByEntrega(@PathVariable("entrega") boolean entrega){
+    @GetMapping("/entrega")
+    public ResponseEntity<List<PedidoDTO>> getPedidoByEntrega(){
         List<PedidoDTO> array = new ArrayList<>();
-        for (PedidoEntity entity : service.getPedidoByEntrega(entrega)){
+        for (PedidoEntity entity : service.getPedidoByEntrega()){
+            PedidoDTO map = modelMapper.map(entity, PedidoDTO.class);
+            array.add(map);
+        }
+        return new ResponseEntity<>(array, HttpStatus.OK);
+    }
+
+    @GetMapping("/ativo")
+    public ResponseEntity<List<PedidoDTO>> getPedidoByAtivo(){
+        List<PedidoDTO> array = new ArrayList<>();
+        for (PedidoEntity entity : service.getPedidoAtivo()){
             PedidoDTO map = modelMapper.map(entity, PedidoDTO.class);
             array.add(map);
         }
@@ -89,7 +100,11 @@ public class PedidoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") final Long id) {
-        service.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            service.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, e.getMessage());
+        }
     }
 }

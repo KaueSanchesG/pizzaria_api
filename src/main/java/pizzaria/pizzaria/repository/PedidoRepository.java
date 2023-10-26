@@ -8,13 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PedidoRepository extends JpaRepository<PedidoEntity, Long> {
+    List<PedidoEntity> findByAtivoTrue();
+
     @Query("SELECT p FROM PedidoEntity p WHERE p.cliente.nome = :nome")
     List<PedidoEntity> findByNomeCliente(String nome);
 
     @Query("SELECT p FROM PedidoEntity p WHERE p.funcionario.nome = :nome")
     List<PedidoEntity> findByNomeFuncionario(String nome);
 
-    List<PedidoEntity> findByEntrega(Boolean entrega);
+    List<PedidoEntity> findByEntregaTrue();
 
     @Query("SELECT p FROM PedidoEntity p WHERE " +
             "EXTRACT(YEAR FROM p.dataHora) = :ano AND " +
