@@ -17,7 +17,13 @@ public class ClienteEntity extends AbstractEntity {
     @Column(unique = true, nullable = false, length = 15)
     private String cpf;
 
-    @OneToMany(mappedBy = "cliente")
+    @ManyToMany
+    @JoinTable(
+            name = "cliente-endereco",
+            schema = "pizzaria",
+            joinColumns = @JoinColumn(name = "cliente_id"),
+            inverseJoinColumns = @JoinColumn(name = "endereco_id")
+    )
     private List<EnderecoEntity> enderecoList;
 
     @OneToMany(mappedBy = "cliente")

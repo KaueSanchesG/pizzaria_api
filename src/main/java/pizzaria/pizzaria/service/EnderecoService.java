@@ -63,8 +63,8 @@ public class EnderecoService {
         if (entity.getRua()==null){
             entity.setRua(dataBase.getRua());
         }
-        if (entity.getCliente()==null){
-            entity.setCliente(dataBase.getCliente());
+        if (entity.getClienteList()==null){
+            entity.setClienteList(dataBase.getClienteList());
         }
     }
 }

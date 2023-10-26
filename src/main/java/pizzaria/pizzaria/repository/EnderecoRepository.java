@@ -8,6 +8,6 @@ import pizzaria.pizzaria.entity.EnderecoEntity;
 import java.util.List;
 
 public interface EnderecoRepository extends JpaRepository<EnderecoEntity, Long> {
-    @Query("SELECT e FROM EnderecoEntity e WHERE e.cliente.nome = :nome")
+    @Query("SELECT e FROM EnderecoEntity e JOIN e.clienteList c WHERE c.nome = :nome")
     List<EnderecoEntity> findByClienteNome(@Param("nome") String nome);
 }

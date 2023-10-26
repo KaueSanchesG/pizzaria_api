@@ -1,13 +1,14 @@
 package pizzaria.pizzaria.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,6 +20,5 @@ public class EnderecoDTO extends AbstractDTO{
     @Positive(message = "O numero deve ser positivo")
     private int numero;
     @JsonIgnoreProperties({"pedidoList", "enderecoList"})
-    @NotNull(message = "O campo n pode ser nullo")
-    private ClienteDTO cliente;
+    private List<ClienteDTO> clienteList;
 }

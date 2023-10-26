@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -15,7 +17,6 @@ public class EnderecoEntity extends AbstractEntity {
     @Column(nullable = false)
     private int numero;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private ClienteEntity cliente;
+    @ManyToMany(mappedBy = "enderecoList")
+    private List<ClienteEntity> clienteList;
 }
