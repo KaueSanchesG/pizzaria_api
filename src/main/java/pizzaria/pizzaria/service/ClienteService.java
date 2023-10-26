@@ -65,7 +65,7 @@ public class ClienteService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O cpf ja existe");
         }
         copyPropertiesToBlankSpaces(entity, database);
-        return repository.save(database);
+        return repository.save(entity);
     }
 
     @Transactional(readOnly = true)

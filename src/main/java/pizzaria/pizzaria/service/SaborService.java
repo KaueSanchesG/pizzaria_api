@@ -51,7 +51,7 @@ public class SaborService {
     public SaborEntity update(Long id, SaborEntity entity) {
         SaborEntity dataBase = this.repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro não encontrado"));
         copyPropertiesToBlankSpaces(entity, dataBase);
-        return this.repository.save(dataBase);
+        return this.repository.save(entity);
     }
 
     @Transactional(readOnly = true)

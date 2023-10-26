@@ -49,7 +49,7 @@ public class EnderecoService {
     public EnderecoEntity update(Long id, EnderecoEntity entity) {
         EnderecoEntity dataBase = this.repository.findById(id).orElseThrow(RegistroNaoEncontradoException::new);
         copyPropertiesToBlankSpaces(entity, dataBase);
-        return this.repository.save(dataBase);
+        return this.repository.save(entity);
     }
 
     @Transactional(readOnly = true)

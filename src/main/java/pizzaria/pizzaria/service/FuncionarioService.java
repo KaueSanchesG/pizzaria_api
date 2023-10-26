@@ -48,7 +48,7 @@ public class FuncionarioService {
     public FuncionarioEntity update(Long id, FuncionarioEntity entity) {
         FuncionarioEntity dataBase = this.repository.findById(id).orElseThrow(RegistroNaoEncontradoException::new);
         copyPropertiesToBlankSpaces(entity, dataBase);
-        return this.repository.save(dataBase);
+        return this.repository.save(entity);
     }
 
     @Transactional(readOnly = true)
