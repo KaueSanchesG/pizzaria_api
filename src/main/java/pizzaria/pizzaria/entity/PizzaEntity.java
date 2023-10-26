@@ -30,7 +30,7 @@ public class PizzaEntity extends AbstractEntity {
     )
     private List<SaborEntity> saborList;
 
-    @ManyToOne
-    private PedidoEntity pedido;
+    @ManyToMany(mappedBy = "pizzaList")
+    private List<PedidoEntity> pedidoList;
 }
 

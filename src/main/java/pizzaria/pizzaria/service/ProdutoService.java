@@ -65,8 +65,8 @@ public class ProdutoService {
         if (entity.getValor() == null) {
             entity.setValor(dataBase.getValor());
         }
-        if (entity.getPedido() == null) {
-            entity.setPedido(dataBase.getPedido());
+        if (entity.getPedidoList() == null) {
+            entity.setPedidoList(dataBase.getPedidoList());
         }
     }
 }

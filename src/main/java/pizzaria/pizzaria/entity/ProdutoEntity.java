@@ -1,11 +1,10 @@
 package pizzaria.pizzaria.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,6 +17,6 @@ public class ProdutoEntity extends AbstractEntity {
     @Column(nullable = false)
     private Double valor;
 
-    @ManyToOne
-    private PedidoEntity pedido;
+    @ManyToMany(mappedBy = "produtoList")
+    private List<PedidoEntity> pedidoList;
 }

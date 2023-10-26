@@ -103,8 +103,8 @@ public class PizzaService {
         if (entity.getSaborList() == null) {
             entity.setSaborList(database.getSaborList());
         }
-        if (entity.getPedido() == null) {
-            entity.setPedido(database.getPedido());
+        if (entity.getPedidoList() == null) {
+            entity.setPedidoList(database.getPedidoList());
         }
     }
 }

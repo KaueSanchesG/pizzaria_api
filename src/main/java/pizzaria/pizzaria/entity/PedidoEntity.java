@@ -16,12 +16,22 @@
         @JoinColumn(name = "cliente_id", nullable = false)
         private ClienteEntity cliente;
 
-        @OneToMany
-        @JoinColumn(name = "produto_id")
+        @ManyToMany
+        @JoinTable(
+                name = "pedido-produto",
+                schema = "pizzaria",
+                joinColumns = @JoinColumn(name = "pedido_id"),
+                inverseJoinColumns = @JoinColumn(name = "produto_id")
+        )
         private List<ProdutoEntity> produtoList;
 
-        @OneToMany
-        @JoinColumn(name = "pizza_id")
+        @ManyToMany
+        @JoinTable(
+                name = "pedido-pizza",
+                schema = "pizzaria",
+                joinColumns = @JoinColumn(name = "pedido_id"),
+                inverseJoinColumns = @JoinColumn(name = "pizza_id")
+        )
         private List<PizzaEntity> pizzaList;
 
         @Column
@@ -39,6 +49,4 @@
         @ManyToOne
         @JoinColumn(name = "funcionario_id", nullable = false)
         private FuncionarioEntity funcionario;
-
-
     }
