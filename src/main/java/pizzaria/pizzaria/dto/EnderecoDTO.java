@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EnderecoDTO extends AbstractDTO{
-    @Size(min = 10, max = 50, message = "A rua deve conter entre 10-50 caracteres")
+    @Size(min = 10, max = 50, message = "A rua deve conter entre 10-50 carácteres")
     private String rua;
     @Positive(message = "O numero deve ser positivo")
     private int numero;
