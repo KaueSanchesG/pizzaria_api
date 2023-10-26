@@ -57,7 +57,7 @@ public class PedidoService {
 
     @Transactional(readOnly = true)
     public List<PedidoEntity> getPedidoByEntrega() {
-        List<PedidoEntity> pedidos = this.repository.findByEntregaTrue();
+        List<PedidoEntity> pedidos = this.repository.findByEntregaTrueAndAtivoTrue();
         if (pedidos.isEmpty()) {
             throw new RegistroNaoEncontradoException();
         }
@@ -106,7 +106,7 @@ public class PedidoService {
         return this.repository.save(entity);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public void delete(Long id) {
         PedidoEntity database = this.repository.findById(id).orElseThrow(RegistroNaoEncontradoException::new);
         database.setAtivo(false);

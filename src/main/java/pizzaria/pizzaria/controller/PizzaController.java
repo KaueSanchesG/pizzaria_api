@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import pizzaria.pizzaria.dto.PizzaDTO;
 import pizzaria.pizzaria.entity.PizzaEntity;
 import pizzaria.pizzaria.entity.enums.Tamanho;
@@ -79,7 +80,11 @@ public class PizzaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") final Long id){
-        service.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            service.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, e.getMessage());
+        }
     }
 }

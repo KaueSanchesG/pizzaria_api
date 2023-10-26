@@ -99,7 +99,7 @@ public class PedidoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") final Long id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
         try {
             service.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
