@@ -42,12 +42,12 @@ public class ClienteService {
     }
 
     @Transactional(readOnly = true)
-    public List<ClienteEntity> getClienteByNome(String nome){
-        List<ClienteEntity> clientes = this.repository.findByNome(nome);
-        if (clientes.isEmpty()){
+    public ClienteEntity getClienteByNome(String nome){
+        ClienteEntity cliente = this.repository.findByNome(nome);
+        if (cliente==null){
             throw new RegistroNaoEncontradoException();
         }
-        return clientes;
+        return cliente;
     }
 
     @Transactional

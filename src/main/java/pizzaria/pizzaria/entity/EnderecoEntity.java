@@ -17,6 +17,6 @@ public class EnderecoEntity extends AbstractEntity {
     @Column(nullable = false)
     private int numero;
 
-    @ManyToMany(mappedBy = "enderecoList")
+    @ManyToMany
     private List<ClienteEntity> clienteList;
 }
