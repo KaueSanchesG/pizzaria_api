@@ -65,11 +65,5 @@ public class FuncionarioService {
         if (entity.getPedidoList() == null) {
             entity.setPedidoList(dataBase.getPedidoList());
         }
-        if (entity.getLogin()==null){
-            entity.setLogin(dataBase.getLogin());
-        }
-        if (entity.getSenha()==null){
-            entity.setSenha(dataBase.getSenha());
-        }
     }
 }

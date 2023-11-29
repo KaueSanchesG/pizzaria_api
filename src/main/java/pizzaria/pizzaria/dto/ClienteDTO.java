@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
+import pizzaria.pizzaria.dto.login.UserDTO;
 
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class ClienteDTO extends AbstractDTO{
     private String nome;
     @CPF(message = "o CPF deve seguir a norma padrão")
     private String cpf;
-    @JsonIgnoreProperties("cliente")
+    private UserDTO credentials;
+    @JsonIgnoreProperties("clienteList")
     private List<EnderecoDTO> enderecoList;
     @JsonIgnoreProperties("cliente")
     private List<PedidoDTO> pedidoList;
