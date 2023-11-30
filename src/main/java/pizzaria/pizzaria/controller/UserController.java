@@ -21,7 +21,7 @@ public class UserController {
         return new ResponseEntity<>(service.getId(id), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<UserEntity> create(@RequestBody @Validated UserEntity entity){
         return new ResponseEntity<>(service.create(entity), HttpStatus.OK);
     }

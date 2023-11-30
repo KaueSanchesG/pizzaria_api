@@ -13,7 +13,8 @@ public class FuncionarioEntity extends AbstractEntity {
     @Column(nullable = false)
     private String nome;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private UserEntity credentials;
 
     @OneToMany(mappedBy = "funcionario")

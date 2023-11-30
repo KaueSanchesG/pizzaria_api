@@ -41,7 +41,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/*").permitAll() //permitir o primeiro nível pra rodar o Angular
                         .requestMatchers("/login/auth").permitAll()
                         .requestMatchers("/user/*").permitAll()
-                        .requestMatchers("/funcionario/").hasRole("ADMIN")
+                        .requestMatchers("/funcionario").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
