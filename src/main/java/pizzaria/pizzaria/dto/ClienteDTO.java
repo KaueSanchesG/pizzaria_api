@@ -22,7 +22,6 @@ public class ClienteDTO extends AbstractDTO{
     private String nome;
     @CPF(message = "o CPF deve seguir a norma padrão")
     private String cpf;
-    private UserDTO credentials;
     @JsonIgnoreProperties("clienteList")
     private List<EnderecoDTO> enderecoList;
     @JsonIgnoreProperties("cliente")

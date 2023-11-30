@@ -16,9 +16,6 @@ public class ClienteEntity extends AbstractEntity{
     @Column(unique = true, nullable = false, length = 15)
     private String cpf;
 
-    @OneToOne
-    private UserEntity credentials;
-
     @ManyToMany
     @JoinTable(
             name = "cliente-endereco",
